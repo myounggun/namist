@@ -3,12 +3,27 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes')
-  , http = require('http')
-  , path = require('path');
+var express		= require('express')
+  , routes		= require('./routes')
+  , http		= require('http')
+  , path		= require('path')
+  , mongoose	= require('mongoose');
+
+var MONGO_URI = 'mongodb://namist:mapfe@58.229.6.204:27017/namist';
+mongoose.connect(MONGO_URI);
+
+var db = mongoose.connection;
+
+db.on('error', function (msg) {
+	console.log(msg);
+});
+
+db.on('open', function () {
+	console.log('database connected');
+});
 
 var app = express();
+
 
 // all environments
 app.set('port', process.env.PORT || 3000);

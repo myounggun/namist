@@ -1,0 +1,49 @@
+<html>
+<head>
+<title><%= title %></title>
+<link rel="stylesheet" type="text/css" href="/stylesheets/admin.css" />
+</head>
+<body>
+	<br><br>
+	<div style="text-align: center;">
+		<span style="font-size:40px;"><%= title %></span>
+	</div>
+	<table cellspacing="0">
+		<tr>
+			<th>ID</th>
+			<th>제목</th>
+			<th>기간</th>
+		</tr>
+		<% 
+			if (questions.length) {
+					questions.forEach(function(question) { 
+		%>
+		<tr>
+			<td class="_fieldValue">
+				<%= question.id %>
+			</td>
+			<td class="_fieldValue">
+				<%=question.title%>
+			</td>
+			<td class="_fieldValue">
+                <%= question.time.start %> ~ <%= question.time.end %>
+            </td>
+		</tr>
+	   <% 
+		  });
+       } else { 
+       %>
+	 	<tr>
+	 		<td colspan="3">
+	 		<span style="font-size:20px;">문제를 추가해 주세요.</span>
+	 		</td>
+	 	</tr>
+	 <% } %>
+	</table>
+	<br/>
+    <center>
+    <input type="submit" class="_btn" value="Regist" onclick="window.location='/admin/question/add'"/>
+    </center>
+    <br><br><br><br>
+</body>
+</html>

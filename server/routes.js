@@ -6,7 +6,6 @@ module.exports = function (app) {
          require('./apps/main'),
          require('./apps/account'),
          require('./apps/admin/question')
-         
      ];
 	
 	for (var i = 0; i < routeList.length; i++) {

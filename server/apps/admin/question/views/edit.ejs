@@ -1,0 +1,59 @@
+<html>
+<head>
+<title><%= title %></title>
+<script type="text/javascript" src="/js/lib/jquery-1.11.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheets/admin.css" />
+</head>
+<body>
+	<br><br>
+	<div style="text-align: center;">
+		<span style="font-size:40px;"><%= title %></span>
+	</div>
+	<form method="POST" action="/admin/question/update" enctype="application/x-www-form-urlencoded">
+	<table cellspacing="0">
+		<tr>
+			<th>Field Name</th>
+			<th>Field Value</th>
+		</tr>
+		<tr>
+			<td class="_fieldName">이미지 주소</td>
+			<td class="_fieldValue">
+				<input type="text" name="image" size="50" value="<%= question.image %>" required/>
+			</td>
+		</tr>
+		<tr>
+			<td class="_fieldName">출제 시간 ~ 마감 시간</td>
+			<td class="_fieldValue">
+				<select name="startTime" class="_hours" required>
+					<% for (var i = 0; i < hours.length; i++) { %>
+						<option value="<%= hours[i].value %>" <% if (hours[i].value === question.time.start) { %>selected="selected"<% } %>>
+							<%= hours[i].name %>
+						</option>
+					<% } %>
+				</select> ~ 
+				<select name="endTime" class="_hours" required>
+					<% for (var i = 0; i < hours.length; i++) { %>
+						<option value="<%= hours[i].value %>" <% if (hours[i].value === question.time.end) { %>selected="selected"<% } %>>
+							<%= hours[i].name %>
+						</option>
+					<% } %>
+				</select>
+			</td>
+		</tr>
+	</table>
+		<br>
+		<center>
+		<div style="width:300px;">
+		    <input type="hidden" name="_method" value="put"/>
+		    <input type="hidden" name="id" value="<%= question.id %>"/>
+		    
+		    <input type="submit" name="submit" style="float:left;margin-right:5px" class="_btn" value="Edit"/>
+		    <input type="reset" name="reset" style="float:left;" class="_btn" value="Reset"/>
+		    <input type="button" style="float:right;" class="_btn" value="List" onclick="location.href='/admin/question'"/>
+	    </div>
+		</center>
+		<br><br><br><br>
+	</form>
+</body>
+<script type="text/javascript" src="/js/admin/question/add.js"></script>
+</html>

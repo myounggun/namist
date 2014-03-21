@@ -2,7 +2,6 @@
  * 문제 출제 스키마 정의
  * 
  * 아아디 - sequence 처리 
- * 제목
  * 짤방 이미지
  * 출제 시간
  * 마감 시간
@@ -13,7 +12,8 @@ var autoIncrement = require('mongoose-auto-increment');
 var Schema = mongoose.Schema;
 
 var Question = new Schema({
-	title : {type: String, require: true, trim: true},
+	id    : {type: Number, require: true, unique: true},
+	date  : {type: Date, default: Date.now},
 	image : {type: String, require: true, trim: true},
 	time  : {
 		start : {type: String},
@@ -23,7 +23,7 @@ var Question = new Schema({
 
 Question.plugin(autoIncrement.plugin, {
     model: 'Question',
-    field: '_id',
+    field: 'id',
     startAt: 1,
     incrementBy: 1
 });

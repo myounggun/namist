@@ -16,12 +16,6 @@
 			<th>Field Value</th>
 		</tr>
 		<tr>
-			<td class="_fieldName">제목</td>
-			<td class="_fieldValue">
-				<input type="text" name="title" size="50" required/>
-			</td>
-		</tr>
-		<tr>
 			<td class="_fieldName">이미지 주소</td>
 			<td class="_fieldValue">
 				<input type="text" name="image" size="50" required/>
@@ -36,9 +30,11 @@
 	</table>
 		<br>
 		<center>
-		<input type="submit" name="submit" class="_btn" value="Submit"/>
-		<input type="reset" name="reset" class="_btn" value="Reset"/>
-		<input type="button" class="_btn" value="List" onclick="location.href='/admin/question/list'"/>
+			<div style="width:300px;">
+		    	<input type="button" style="float:right;" class="_btn" value="List" onclick="location.href='/admin/question'"/>
+		    	<input type="submit" name="submit" style="float:left;margin-right:5px" class="_btn" value="Submit"/>
+		    	<input type="reset" name="reset" style="float:left;" class="_btn" value="Reset"/>	
+		    </div>
 		</center>
 	</form>
 	<br><br><br><br>

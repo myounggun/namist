@@ -1,7 +1,10 @@
 var Question = require('./questionModel');
 
+var hours = null;
+
 function list(req, res) {
-	Question.find({}, function (err, docs) {
+	Question.find({}, {}, 
+			{sort: {id: -1}}, function (err, docs) {
 		var data = {
 				title: "문제 목록",
 				questions: docs
@@ -17,14 +20,34 @@ function list(req, res) {
 function add(req, res) {
 	res.render('add', {
 		locals: {
-			title: "문제 추가"
+			title: "문제 추가",
+			hours: getHours()
 		}
+	});
+}
+
+function edit (req, res) {
+	Question.findOne({id: req.params.id}, function (err, doc) {
+		if (err || !doc) {
+			res.redirect('admin/question');
+			return;
+		}
+
+		var data = {
+				title: '문제 수정',
+				hours: getHours(),
+				question: doc		
+		};
+		
+		res.render('edit', {
+			locals: data,
+			cache: false
+		})
 	});
 }
 
 function create(req, res) {
 	var row = {
-			title : req.body.title,
 			image : req.body.image,
 			time  : {
 				start : req.body.startTime,
@@ -37,10 +60,88 @@ function create(req, res) {
 			throw new Error('create error : ' + err);
 		}
 		
-		res.redirect('/admin/question/list');
+		res.redirect('/admin/question/' + doc.id);
 	});
+}
+
+function read(req, res) {
+	Question.findOne({id: req.params.id}, function (err, doc) {
+		if (err || !doc) {
+			res.redirect('/admin/question');
+			return;
+		}
+
+		res.render('read', {
+			locals: {
+				title: "문제 정보",
+				question: doc
+			}
+		});
+	});
+}
+
+function update(req, res) {
+	var row = {
+			image : req.body.image,
+			time  : {
+				start : req.body.startTime,
+				end   : req.body.endTime
+			}
+	};
+	
+	Question.update({id: req.body.id}, {$set: row}, 
+			{safe: true}, function (err, doc) {
+				res.redirect('/admin/question/' + doc.id);
+	});
+}
+
+function del(req, res) {
+	Question.remove({id: req.body.id}, function(err, docs) {
+		if (err) {
+			throw new Error('del error : ' + err);
+		}
+		
+		res.redirect('/admin/question');
+	});
+}
+
+function createHours() {
+	if (hours) {
+		return hours;
+	}
+	
+	hours = [];
+	hours.push({name:"시간선택", value:""});
+	for (var i = 0; i < 24; i++) {
+		var value = i;
+		var name = (i % 12) ? i % 12 : 12;
+		var ampm = (i >= 12) ? 'PM' : 'AM';
+		
+		value = ('00' + value).slice(-2);
+		name  = ('00' + name).slice(-2);
+		
+		hours.push({
+				name  : name  + ':00 ' + ampm,
+				value : value + ':00'
+		});
+		
+		hours.push({
+			name  : name  + ':30 ' + ampm,
+			value : value + ':30'
+		});
+	}
+	
+	return hours;
+}
+
+function getHours() {
+	return createHours();
 }
 
 exports.list   = list;
 exports.add    = add;
+exports.edit   = edit;
 exports.create = create;
+exports.read   = read;
+exports.update = update;
+exports.del    = del;

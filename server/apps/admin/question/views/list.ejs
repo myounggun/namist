@@ -8,41 +8,34 @@
 	<div style="text-align: center;">
 		<span style="font-size:40px;"><%= title %></span>
 	</div>
+	<center>
+    	<input type="submit" class="_btn" value="Regist" onclick="window.location='/admin/question/add'"/>
+    </center>
 	<table cellspacing="0">
-		<tr>
-			<th>ID</th>
-			<th>제목</th>
-			<th>기간</th>
-		</tr>
 		<% 
-			if (questions.length) {
-					questions.forEach(function(question) { 
+			var len = questions.length;
+			for (var i = 0; i < len; i++) {
+				var question = questions[i];
+				var date = question.date;
+				var displayDate = date.getFullYear() + ". " + (parseInt(date.getMonth(), 10) + 1) + ". " + date.getDate();
 		%>
 		<tr>
-			<td class="_fieldValue">
-				<%= question.id %>
+			<td style="text-align: center">
+				
+				<br/>
+				<a href="/admin/question/<%= question.id %>" target="_self">
+					<img src="<%= question.image %>" width="250" height="250" />
+				<br/>
+				[id = <b><%= question.id %></b>] <%= displayDate %> <br/>
+				기간: <%= question.time.start %> ~ <%= question.time.end %>
+				</a>
 			</td>
-			<td class="_fieldValue">
-				<%=question.title%>
-			</td>
-			<td class="_fieldValue">
-                <%= question.time.start %> ~ <%= question.time.end %>
-            </td>
 		</tr>
-	   <% 
-		  });
-       } else { 
-       %>
-	 	<tr>
-	 		<td colspan="3">
-	 		<span style="font-size:20px;">문제를 추가해 주세요.</span>
-	 		</td>
-	 	</tr>
-	 <% } %>
+	   <% }; %>
 	</table>
 	<br/>
     <center>
-    <input type="submit" class="_btn" value="Regist" onclick="window.location='/admin/question/add'"/>
+    	<input type="submit" class="_btn" value="Regist" onclick="window.location='/admin/question/add'"/>
     </center>
     <br><br><br><br>
 </body>

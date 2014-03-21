@@ -1,12 +1,17 @@
 var Question = require('./questionModel');
 
+var LIST_PAGE_TITLE = "문제 목록";
+var ADD_PAGE_TITLE  = "문제 추가";
+var EDIT_PAGE_TITLE = "문제 수정";
+var READ_PAGE_TITLE = "문제 정보";
+
 var hours = null;
 
 function list(req, res) {
 	Question.find({}, {}, 
 			{sort: {id: -1}}, function (err, docs) {
 		var data = {
-				title: "문제 목록",
+				title: LIST_PAGE_TITLE,
 				questions: docs
 		};
 		
@@ -20,7 +25,7 @@ function list(req, res) {
 function add(req, res) {
 	res.render('add', {
 		locals: {
-			title: "문제 추가",
+			title: ADD_PAGE_TITLE,
 			hours: getHours()
 		}
 	});
@@ -34,7 +39,7 @@ function edit (req, res) {
 		}
 
 		var data = {
-				title: '문제 수정',
+				title: EDIT_PAGE_TITLE,
 				hours: getHours(),
 				question: doc		
 		};
@@ -73,7 +78,7 @@ function read(req, res) {
 
 		res.render('read', {
 			locals: {
-				title: "문제 정보",
+				title: READ_PAGE_TITLE,
 				question: doc
 			}
 		});

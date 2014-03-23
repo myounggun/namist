@@ -1,0 +1,42 @@
+<html>
+<head>
+<title><%= title %></title>
+<link rel="stylesheet" type="text/css" href="/stylesheets/admin.css" />
+</head>
+<body>
+	<br><br>
+	<div style="text-align: center;">
+		<span style="font-size:40px;"><%= title %></span>
+	</div>
+	<center>
+    	<input type="submit" class="_btn" value="Regist" onclick="window.location='/admin/question/add'"/>
+    </center>
+	<table cellspacing="0">
+		<% 
+			var len = questions.length;
+			for (var i = 0; i < len; i++) {
+				var question = questions[i];
+				var date = question.date;
+				var displayDate = date.getFullYear() + ". " + (parseInt(date.getMonth(), 10) + 1) + ". " + date.getDate();
+		%>
+		<tr>
+			<td style="text-align: center">
+				
+				<br/>
+				<a href="/admin/question/<%= question.id %>" target="_self">
+					<img src="<%= question.image %>" width="250" height="250" />
+				<br/>
+				[id = <b><%= question.id %></b>] <%= displayDate %> <br/>
+				기간: <%= question.time.start %> ~ <%= question.time.end %>
+				</a>
+			</td>
+		</tr>
+	   <% }; %>
+	</table>
+	<br/>
+    <center>
+    	<input type="submit" class="_btn" value="Regist" onclick="window.location='/admin/question/add'"/>
+    </center>
+    <br><br><br><br>
+</body>
+</html>

@@ -3,16 +3,18 @@
  * Module dependencies.
  */
 
-var express		= require('express')
-  , routes		= require('./routes')
-  , http		= require('http')
-  , path		= require('path')
-  , mongoose	= require('mongoose');
+var express		  = require('express')
+  , routes		  = require('./routes')
+  , http		  = require('http')
+  , path		  = require('path')
+  , mongoose	  = require('mongoose')
+  , autoIncrement = require('mongoose-auto-increment');
 
 var MONGO_URI = 'mongodb://namist:mapfe@58.229.6.204:27017/namist';
 mongoose.connect(MONGO_URI);
 
 var db = mongoose.connection;
+autoIncrement.initialize(db);
 
 db.on('error', function (msg) {
 	console.log(msg);

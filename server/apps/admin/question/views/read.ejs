@@ -1,0 +1,44 @@
+<html>
+<head>
+<title><%=title%></title>
+<script type="text/javascript" src="/js/lib/jquery-1.11.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheets/admin.css" />
+</head>
+<body>
+    <br><br>
+    <div style="text-align: center;">
+        <span style="font-size:40px;"><%= title %></span>
+    </div>
+	<table cellspacing="0">
+		<tr>
+			<th>Field Name</th>
+			<th>Field Value</th>
+		</tr>
+		<tr>
+			<td class="_fieldName">출제 시간 ~ 마감 시간</td>
+			<td class="_fieldValue">
+				<%= question.time.start %> ~ <%= question.time.end %>
+			</td>
+		</tr>
+		<tr>
+			<td class="_fieldName">이미지</td>
+			<td class="_fieldValue">
+				<img src="<%= question.image %>"/>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<center>
+   	<div style="width:200px">
+		<input type="button" style="float:left;margin-right:5px" class="_btn" value="Edit" onclick="window.location='/admin/question/edit/<%= question.id %>'"/>
+		<form method="POST" style="float:left;" action="/admin/question" enctype="application/x-www-form-urlencoded">
+			<input type="hidden" name="_method" value="delete"/>
+			<input type="hidden" name="id" value="<%= question.id %>"/>
+			<input type="submit" name="submit" value="Del" class="_btn"/>
+		</form>
+		<input type="button" style="float:right;" class="_btn" value="List" onclick="location.href='/admin/question'"/>
+	<div>
+	</center>
+	<br><br><br><br>
+</body>
+</html>

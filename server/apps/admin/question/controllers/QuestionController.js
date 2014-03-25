@@ -47,7 +47,8 @@ function add(req, res) {
 	res.render('add', {
 		locals: {
 			title: ADD_PAGE_TITLE,
-			hours: getHours()
+			hours: getHours(),
+			page: page
 		}
 	});
 }

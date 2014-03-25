@@ -15,6 +15,18 @@
 			<th>Field Value</th>
 		</tr>
 		<tr>
+			<td class="_fieldName">출제 날짜</td>
+			<td class="_fieldValue">
+				<%
+					var date = question.date;
+					var m = parseInt(date.getMonth(), 10) + 1;
+					var d = date.getDate();
+					var displayDate = date.getFullYear() + ". " + ('00' + m).slice(-2) + ". " + ('00' + d).slice(-2);
+				%>
+				<%= displayDate %>
+			</td>
+		</tr>
+		<tr>
 			<td class="_fieldName">출제 시간 ~ 마감 시간</td>
 			<td class="_fieldValue">
 				<%= question.time.start %> ~ <%= question.time.end %>

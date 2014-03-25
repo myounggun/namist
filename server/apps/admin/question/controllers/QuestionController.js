@@ -1,4 +1,5 @@
 var Question = require('../Question');
+var async = require('async');
 
 var LIST_PAGE_TITLE = "문제 목록";
 var ADD_PAGE_TITLE  = "문제 추가";
@@ -6,20 +7,40 @@ var EDIT_PAGE_TITLE = "문제 수정";
 var READ_PAGE_TITLE = "문제 정보";
 
 var hours = null;
+var page = 1;
+var pageSize = 2;
 
 function list(req, res) {
-	Question.find({}, {}, 
-			{sort: {id: -1}}, function (err, docs) {
-		var data = {
-				title: LIST_PAGE_TITLE,
-				questions: docs
-		};
-		
-		res.render('list', {
-			locals: data,
-			cache: false
-		});
-	});
+	page = req.query.page || 1;
+
+	async.waterfall([
+  		function(callback) {
+  			Question.count({}, function(err, count) {
+  				callback(null, count);
+  			});
+  		},
+  		function(totalCount, callback) {
+  			Question.find({}, {},{ 
+						sort  : {id: -1},
+						skip  : (page - 1) * pageSize, 
+						limit : pageSize
+					}, function (err, docs) {
+				var data = {
+						title: LIST_PAGE_TITLE,
+						questions: docs,
+						page: page,
+						totalPage: Math.ceil(totalCount / pageSize)
+				};
+				
+				res.render('list', {
+					locals: data,
+					cache: false
+				});
+			});
+  		}
+  	], function (err, result) {
+  		if (err) console.log(err);
+  	});
 }
 
 function add(req, res) {
@@ -79,7 +100,8 @@ function read(req, res) {
 		res.render('read', {
 			locals: {
 				title: READ_PAGE_TITLE,
-				question: doc
+				question: doc,
+				page: page
 			}
 		});
 	});

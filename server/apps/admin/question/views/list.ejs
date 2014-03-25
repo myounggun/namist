@@ -1,6 +1,8 @@
 <html>
 <head>
 <title><%= title %></title>
+<script type="text/javascript" src="/js/lib/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="/js/lib/jquery.jqpagination.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/stylesheets/admin.css" />
 </head>
 <body>
@@ -37,8 +39,17 @@
 	</table>
 	<br/>
     <center>
+    	<div class="_pagination">
+		    <a href="#" class="first" data-action="first">&laquo;</a>
+		    <a href="#" class="previous" data-action="previous">&lsaquo;</a>               
+		    <input type="text" readonly="readonly" data-current-page="<%= page %>" data-max-page="<%= totalPage %>" style="text-align:center" />
+		    <a href="#" class="next" data-action="next">&rsaquo;</a>
+		    <a href="#" class="last" data-action="last">&raquo;</a>
+		</div>
+		<br>
     	<input type="submit" class="_btn" value="Regist" onclick="window.location='/admin/question/add'"/>
     </center>
     <br><br><br><br>
 </body>
+<script type="text/javascript" src="/js/admin/question/list.js"></script>
 </html>

@@ -1,6 +1,7 @@
 /*global, jquery $*/
 (function ($) {
-	var hours = [];
+	/* 서버단에서 처리 
+	 var hours = [];
 	hours.push({name:"시간선택", value:""});
 	for (var i = 0; i < 24; i++) {
 		var value = i;
@@ -23,5 +24,5 @@
 
 	$.each(hours, function(index, item) {
         $('._hours').append('<option value="' + item.value + '">' + item.name + '</option>');
-    });
+    });*/
 }(jQuery));

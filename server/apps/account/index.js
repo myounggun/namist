@@ -3,7 +3,7 @@
  */
 var express		= require('express');
 var app			= module.exports = express();
-var controller	= require('./controller/RegisterController');
+var controller	= require('./controllers/RegisterController');
 
 app.set('views', __dirname + '/views' );
 app.set('view engine', 'ejs');

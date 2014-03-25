@@ -66,7 +66,7 @@
 	<div class="wrap">
 		<div class="title">제목 학원 회원 가입</div>
 		<div class="the-form signup">
-			<form action="/register">
+			<form action="/register" method="post">
 				<div class="fields">
 					<div class="input string required user_full_name">
 						<input class="string required" id="user_full_name" maxlength="255" name="username" placeholder="아이디" required="required" size="50" type="text">
@@ -75,7 +75,7 @@
 						<input class="string email required" id="user_email" maxlength="255" name="email" placeholder="Email" required="required" size="50" type="email" value="">
 					</div>
 					<div class="input password required user_password">
-						<input class="password required" id="user_password" maxlength="128" name="passwd" placeholder="Password" required="required" size="50" type="password">
+						<input class="password required" id="user_password" maxlength="128" name="password" placeholder="Password" required="required" size="50" type="password">
 					</div>
 				</div>
 				<input class="button submit" data-disable-with="Please wait.." name="commit" type="submit" value="Create Account">

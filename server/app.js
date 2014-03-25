@@ -10,6 +10,9 @@ var express		  = require('express')
   , mongoose	  = require('mongoose')
   , autoIncrement = require('mongoose-auto-increment');
 
+var passport		= require('passport');
+var LocalStrategy	= require('passport-local').Strategy;
+
 var MONGO_URI = 'mongodb://namist:mapfe@58.229.6.204:27017/namist';
 mongoose.connect(MONGO_URI);
 
@@ -35,10 +38,19 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
+app.use(express.cookieParser('namist'));
+app.use(express.session());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, '../client')));
 
 routes(app);
+
+var Account = require('./apps/account/Account');
+passport.use(new LocalStrategy(Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
 
 // development only
 if ('development' == app.get('env')) {

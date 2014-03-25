@@ -5,6 +5,9 @@
  * 짤방 이미지
  * 출제 시간
  * 마감 시간
+ * 제목 목록
+ *  - 후보 제목
+ *  - like 사용자 목록
  */
 var mongoose = require('mongoose');
 var autoIncrement = require('mongoose-auto-increment');
@@ -18,7 +21,11 @@ var Question = new Schema({
 	time  : {
 		start : {type: String},
 		end   : {type: String}
-	}
+	},
+	titles : [{
+		title: {type: String},
+		usernames: [{type: String}]
+	}]
 });
 
 Question.plugin(autoIncrement.plugin, {

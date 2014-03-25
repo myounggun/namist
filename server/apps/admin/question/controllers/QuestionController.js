@@ -1,4 +1,4 @@
-var Question = require('./questionModel');
+var Question = require('../Question');
 
 var LIST_PAGE_TITLE = "문제 목록";
 var ADD_PAGE_TITLE  = "문제 추가";

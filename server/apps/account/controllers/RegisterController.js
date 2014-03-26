@@ -5,7 +5,7 @@
 var async		= require('async');
 var passport	= require('passport');
 var Account		= require('../Account');
-var tokenizer = require('../../verification/Tokenizer.js');
+var Tokenizer = require('../../verification/Tokenizer.js');
 
 
 // TODO 중복 이메일, 중복 아이디
@@ -27,8 +27,13 @@ function onRegister (req, res) {
 			});
 		}
 
-		tokenizer.createToken(account, function(err, token) {
+		var authByToken = Tokenizer(req, res);
+
+		authByToken.createToken(account, function(err, token) {
 			if (err) throw err;
+
+			console.log(token);
+			authByToken.sendVerificationEmail(account, token);
 
 			passport.authenticate('local')(req, res, function () {
 				res.send('Send verification email by token \''+ token +'\'. Complete!');

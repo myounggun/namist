@@ -1,0 +1,43 @@
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<title>가입한 사용자 목록 | 제목 학원</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style type="text/css">
+		ul, li {list-style:none;display:block;position:relative;}
+		ul { padding:5px;border:solid 2px #eee;word-break:break-all; }
+		li { text-overflow:ellipsis;height:25px;line-height:25px;overflow:hidden; }
+		.buttons input { vertical-align:middle; }
+	</style>
+</head>
+<body>
+	<h1><%= collectionName %></h1>
+
+	<% for (var i=0, ii=collections.length, doc; i<ii; i++) {
+		doc = collections[i]; %>
+	<ul>
+		<li class="buttons">
+			<input type="button" value="삭제" />
+		</li>
+		<% for (var key in doc) if (doc.hasOwnProperty(key)) { %>
+		<li><%= key %> : <%= doc[key] %></li>
+		<% } %>
+	</ul>
+	<% } %>
+
+<script type="text/javascript">
+var removeBtns = document.getElementsByTagName("input");
+removeBtns = Array.prototype.slice.apply(removeBtns);
+
+for (var i=removeBtns.length-1; i>=0; i--) {
+	if (removeBtns[i].type !== "button") {
+		removeBtns.splice(i, 1);
+	}
+}
+
+console.log(removeBtns);
+
+</script>
+
+</body>
+</html>

@@ -5,12 +5,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-	<h1>유효하지 않은 email 인증입니다.</h1>
-
-	<strong style="color:#f00">인증실패</strong>
+	<h1>이미 인증이 완료되었습니다.</h1>
 
 	<ul>
 		<li>Token : <%= token %></li>
+		<li>Username: <%= account.username %></li>
+		<li>E-mail: <%= account.email %></li>
 	</ul>
 </body>
 </html>

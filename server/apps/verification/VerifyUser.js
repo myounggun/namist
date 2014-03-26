@@ -1,26 +1,37 @@
 var tokenModel = require('./VerificationTokenModel');
 
 module.exports = function(token, done) {
-    tokenModel.findOne({token: token}, function (err, refUser){
-        if (err) return done(err);
+    tokenModel.findOne({token: token}, function (err, refToken){
+        if (err) return done(err, null, 'Error');
 
-        console.log(refUser);
+        console.log(refToken);
 
-        if (!refUser) return done(new Error('unrecognized token!'));
+        if (!refToken) return done(new Error('unrecognized token!'), null, 'NoToken');
 
         var Account = require('../account/Account');
 
         Account.findOne({
-            _id: refUser._userId
+            _id: refToken._userId
         }, function(err, user) {
-            if (err) return done(err);
+            if (err) return done(err, null, 'NoAccount');
 
-            user['authentication'] = true;
-            user.save(function(err) {
-                if (err) done(err);
+            if (refToken.verified) {
+                return done(null, user, 'Already');
+            } else {
+                refToken['verified'] = true;
+                refToken.save(function(err) {
+                    if (err) throw err;
 
-                done();
-            });
+                    console.log('token updated');
+
+                    user['authentication'] = true;
+                    user.save(function(err) {
+                        if (err) done(err);
+
+                        done(null, user, 'Success');
+                    });
+                });
+            }
         });
     });
 };

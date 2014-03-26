@@ -10,8 +10,8 @@ tokenScheme.methods.createVerificationToken = function (done) {
     verificationToken.save( function (err) {
         if (err) return done(err);
 
-        return done(null, token);
         console.log("Verification token", verificationToken);
+        return done(null, token);
     });
 };
 

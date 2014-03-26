@@ -10,11 +10,17 @@ var mongoose = require('mongoose'),
             type: String,
             required: true
         },
+        verified: {
+            type: Boolean,
+            require: true,
+            default: false
+        },
         createdAt: {
             type: Date,
             required: true,
             default: Date.now,
-            expires: '1m'
+            // expires: '4h'
+            expires: 120
         }
     });
 

@@ -36,7 +36,7 @@
 </div>
 <!--signup container-->
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="emailErrorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -44,7 +44,7 @@
                 <h4 class="modal-title" id="myModalLabel">Sorry!</h4>
             </div>
             <div class="modal-body">
-                <p>Please enter a vaild email address.</p>
+                <p>Please enter a valid email address.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -73,7 +73,7 @@
             if (reg.test(value)) {
                 return true;
             } else {
-                $('#myModal').modal({show: true, keyboard: true});
+                $('#emailErrorModal').modal({show: true, keyboard: true});
                 return false;
             }
         });

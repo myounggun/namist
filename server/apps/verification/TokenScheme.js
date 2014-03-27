@@ -20,7 +20,11 @@ var mongoose = require('mongoose'),
             required: true,
             default: Date.now,
             // expires: '4h'
-            expires: 120
+            expires: 120,
+
+            index: {
+                expires: 120
+            }
         }
     });
 

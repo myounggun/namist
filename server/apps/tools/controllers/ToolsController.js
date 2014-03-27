@@ -32,5 +32,37 @@ module.exports = {
 				cache: false
 			});
 		});
+	},
+
+	accountDelete: function(req, res, next) {
+		var objectId = req.params.id;
+
+		AccountModel.remove({
+			_id: objectId
+		}, function(err, resCode) {
+			if (err) throw err;
+
+			if (resCode) {
+				res.redirect('/tools/account/list');
+			} else {
+				res.send('삭제가 실패하였습니다!');
+			}
+		});
+	},
+
+	tokenDelete: function(req, res, next) {
+		var objectId = req.params.id;
+
+		TokenModel.remove({
+			_id: objectId
+		}, function(err, resCode) {
+			if (err) throw err;
+
+			if (resCode) {
+				res.redirect('/tools/token/list');
+			} else {
+				res.send('삭제가 실패하였습니다!');
+			}
+		});
 	}
 };

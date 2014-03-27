@@ -81,7 +81,7 @@ function create(req, res) {
 				end   : req.body.endTime
 			}
 	};
-	Question.set('token', token);
+
 	new Question(row).save(function (err, doc) {
 		if (err) {
 			throw new Error('create error : ' + err);
@@ -97,7 +97,6 @@ function read(req, res) {
 			res.redirect('/admin/question');
 			return;
 		}
-		console.log(doc);
 
 		res.render('read', {
 			locals: {

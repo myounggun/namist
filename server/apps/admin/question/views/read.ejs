@@ -43,14 +43,25 @@
 	<center>
    	<div style="width:200px">
 		<input type="button" style="float:left;margin-right:5px" class="_btn" value="Edit" onclick="window.location='/admin/question/edit/<%= question.id %>'"/>
-		<form method="POST" style="float:left;" action="/admin/question" enctype="application/x-www-form-urlencoded">
+		<form method="POST" id="deleteForm" style="float:left;" action="/admin/question" enctype="application/x-www-form-urlencoded">
 			<input type="hidden" name="_method" value="delete"/>
 			<input type="hidden" name="id" value="<%= question.id %>"/>
-			<input type="submit" name="submit" value="Del" class="_btn"/>
+			<input type="button" id="deleteBtn" value="Del" class="_btn"/>
 		</form>
 		<input type="button" style="float:right;" class="_btn" value="List" onclick="location.href='/admin/question/?page=<%= page %>'"/>
 	<div>
 	</center>
 	<br><br><br><br>
+	
+<script type="text/javascript">
+	var deleteForm = $('#deleteForm'),
+		deleteBtn  = $('#deleteBtn');
+	
+	deleteBtn.on('click', function(e) {
+		if (confirm("짤방 문제를 삭제하시겠습니까?") == true) {
+		    deleteForm.submit();
+		}
+	});
+</script>
 </body>
 </html>

@@ -18,7 +18,20 @@
 		<tr>
 			<td class="_fieldName">출제 시간 ~ 마감 시간</td>
 			<td class="_fieldValue">
-				<select name="startTime" class="_hours" required></select> ~ <select name="endTime" class="_hours" required></select>
+				<select name="startTime" class="_hours" required>
+					<% for (var i = 0; i < hours.length; i++) { %>
+						<option value="<%= hours[i].value %>">
+							<%= hours[i].name %>
+						</option>
+					<% } %>
+				</select> ~ 
+				<select name="endTime" class="_hours" required>
+					<% for (var i = 0; i < hours.length; i++) { %>
+						<option value="<%= hours[i].value %>">
+							<%= hours[i].name %>
+						</option>
+					<% } %>
+				</select>
 			</td>
 		</tr>
 		<tr>

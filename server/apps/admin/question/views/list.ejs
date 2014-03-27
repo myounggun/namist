@@ -18,10 +18,6 @@
 			var len = questions.length;
 			for (var i = 0; i < len; i++) {
 				var question = questions[i];
-				var date = question.date;
-				var m = parseInt(date.getMonth(), 10) + 1;
-				var d = date.getDate();
-				var displayDate = date.getFullYear() + ". " + ('00' + m).slice(-2) + ". " + ('00' + d).slice(-2);
 		%>
 		<tr>
 			<td style="text-align: center">
@@ -30,7 +26,7 @@
 				<a href="/admin/question/<%= question.id %>" target="_self">
 					<img src="<%= question.image %>" width="250" height="250" />
 				<br/>
-				[id = <b><%= question.id %></b>] <%= displayDate %> <br/>
+				[id = <b><%= question.id %></b>] <%= question.displayDate %> <br/>
 				기간: <%= question.time.start %> ~ <%= question.time.end %>
 				</a>
 			</td>

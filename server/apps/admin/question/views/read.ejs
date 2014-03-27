@@ -2,6 +2,7 @@
 <head>
 <title><%=title%></title>
 <script type="text/javascript" src="/js/lib/jquery-1.11.0.min.js"></script>
+jquery-dateFormat.min.js
 <link rel="stylesheet" type="text/css" href="/stylesheets/admin.css" />
 </head>
 <body>
@@ -17,13 +18,7 @@
 		<tr>
 			<td class="_fieldName">출제 날짜</td>
 			<td class="_fieldValue">
-				<%
-					var date = question.date;
-					var m = parseInt(date.getMonth(), 10) + 1;
-					var d = date.getDate();
-					var displayDate = date.getFullYear() + ". " + ('00' + m).slice(-2) + ". " + ('00' + d).slice(-2);
-				%>
-				<%= displayDate %>
+				<%= question.displayDate %>
 			</td>
 		</tr>
 		<tr>

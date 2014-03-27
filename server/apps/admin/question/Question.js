@@ -11,6 +11,7 @@
  */
 var mongoose = require('mongoose');
 var autoIncrement = require('mongoose-auto-increment');
+var dateFormat = require('dateformat');
 
 var Schema = mongoose.Schema;
 
@@ -26,6 +27,11 @@ var Question = new Schema({
 		title: {type: String},
 		usernames: [{type: String}]
 	}]
+});
+
+Question.virtual('displayDate')
+.get(function () {
+	return dateFormat(this.date, "yyyy-mm-dd");;
 });
 
 Question.plugin(autoIncrement.plugin, {

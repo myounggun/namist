@@ -2,7 +2,6 @@
 <head>
 <title><%=title%></title>
 <script type="text/javascript" src="/js/lib/jquery-1.11.0.min.js"></script>
-jquery-dateFormat.min.js
 <link rel="stylesheet" type="text/css" href="/stylesheets/admin.css" />
 </head>
 <body>
@@ -14,6 +13,12 @@ jquery-dateFormat.min.js
 		<tr>
 			<th>Field Name</th>
 			<th>Field Value</th>
+		</tr>
+		<tr>
+			<td class="_fieldName">아이디</td>
+			<td class="_fieldValue">
+				<%= question.id %>
+			</td>
 		</tr>
 		<tr>
 			<td class="_fieldName">출제 날짜</td>

@@ -20,16 +20,18 @@ function list(req, res) {
   			});
   		},
   		function(totalCount, callback) {
-  			Question.find({}, {},{ 
-						sort  : {id: -1},
-						skip  : (page - 1) * pageSize, 
-						limit : pageSize
-					}, function (err, docs) {
+  			var pagingOption = {
+  					sort  : {id: -1},
+					skip  : (page - 1) * pageSize, 
+					limit : pageSize
+			};
+  			
+  			Question.find({}, {}, pagingOption, function (err, docs) {
 				var data = {
-						title: LIST_PAGE_TITLE,
-						questions: docs,
-						page: page,
-						totalPage: Math.ceil(totalCount / pageSize)
+						title     : LIST_PAGE_TITLE,
+						questions : docs,
+						page      : page,
+						totalPage : Math.ceil(totalCount / pageSize)
 				};
 				
 				res.render('list', {
@@ -38,98 +40,95 @@ function list(req, res) {
 				});
 			});
   		}
-  	], function (err, result) {
-  		if (err) console.log(err);
+  	], 
+  	function (err, result) {
+		if (err) throw err;
   	});
 }
 
 function add(req, res) {
 	res.render('add', {
 		locals: {
-			title: ADD_PAGE_TITLE,
-			hours: getHours(),
-			page: page
+			title : ADD_PAGE_TITLE,
+			hours : getHours(),
+			page  : page
 		}
 	});
 }
 
-function edit (req, res) {
-	Question.findOne({id: req.params.id}, function (err, doc) {
+function edit(req, res) {
+	Question.findOne({
+		id: req.params.id
+	}, 
+	function (err, doc) {
 		if (err || !doc) {
-			res.redirect('admin/question');
+			res.redirect('/admin/question/?page=' + page);
 			return;
 		}
-
-		var data = {
-				title: EDIT_PAGE_TITLE,
-				hours: getHours(),
-				question: doc		
-		};
 		
 		res.render('edit', {
-			locals: data,
-			cache: false
-		})
+			locals: {
+				title    : EDIT_PAGE_TITLE,
+				hours    : getHours(),
+				question : doc		
+			}
+		});
 	});
 }
 
 function create(req, res) {
-	var row = {
-			image : req.body.image,
-			time  : {
-				start : req.body.startTime,
-				end   : req.body.endTime
-			}
-	};
+	var document = getDocumentOfCollectionBy(req.body);
 
-	new Question(row).save(function (err, doc) {
-		if (err) {
-			throw new Error('create error : ' + err);
-		}
+	new Question(document).save(function (err, doc) {
+		if (err) throw err;
 		
 		res.redirect('/admin/question/' + doc.id);
 	});
 }
 
 function read(req, res) {
-	Question.findOne({id: req.params.id}, function (err, doc) {
+	Question.findOne({
+		id: req.params.id
+	}, 
+	function (err, doc) {
 		if (err || !doc) {
-			res.redirect('/admin/question');
+			res.redirect('/admin/question/?page=' + page);
 			return;
 		}
 
 		res.render('read', {
 			locals: {
-				title: READ_PAGE_TITLE,
-				question: doc,
-				page: page
+				title    : READ_PAGE_TITLE,
+				question : doc,
+				page     : page
 			}
 		});
 	});
 }
 
 function update(req, res) {
-	var row = {
-			image : req.body.image,
-			time  : {
-				start : req.body.startTime,
-				end   : req.body.endTime
-			}
-	};
+	var document = getDocumentOfCollectionBy(req.body);
 	
-	Question.update({id: req.body.id}, {$set: row}, 
-			{safe: true}, function (err, doc) {
-				res.redirect('/admin/question/' + doc.id);
+	Question.update({
+		id: req.body.id
+	}, 
+	{$set: document},
+	{safe: true}, 
+	function (err, result) {
+		if (err) throw err;
+		
+		res.redirect('/admin/question/' + req.body.id);
 	});
 }
 
 function del(req, res) {
-	Question.remove({id: req.body.id}, function(err, docs) {
-		if (err) {
-			throw new Error('del error : ' + err);
-		}
+	Question.remove({
+		id: req.body.id
+	}, 
+	function(err, docs) {
+		if (err) throw err;
 		
-		res.redirect('/admin/question');
+		res.redirect('/admin/question/?page=' + page);
 	});
 }
 
@@ -164,6 +163,26 @@ function createHours() {
 
 function getHours() {
 	return createHours();
+}
+
+/**
+ * 문제 등록/수정 처리를 위해 Form 입력 값을 Document 형태로 반환한다.
+ * 
+ * @param body	req.body
+ * @returns document
+ */
+function getDocumentOfCollectionBy(body) {
+	if (!body) return null;
+	
+	var document = {
+			image : body.image,
+			time  : {
+				start : body.startTime,
+				end   : body.endTime
+			}
+	};
+	
+	return document;
 }
 
 exports.list   = list;

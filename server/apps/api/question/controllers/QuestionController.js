@@ -88,15 +88,15 @@ function refineDocs(docs) {
 }
 
 function refineDoc(doc) {
-    return {
-        id      : doc.id,
-        date    : doc.date,
-        image   : doc.image,
-        time    : doc.time,
-        titles  : doc.title,
-
-        displayDate : doc.displayDate // virtual
-    }
+	return {
+		id      : doc.id,
+		date    : doc.date,
+		image   : doc.image,
+		time    : doc.time,
+		titles  : doc.title,
+		
+		displayDate : doc.displayDate // virtual
+	}
 }
 
 exports.list = list;

@@ -15,6 +15,8 @@ var dateFormat = require('dateformat');
 
 var Schema = mongoose.Schema;
 
+// 문제 출제자의 id, 문제(짤방)내용, 시간정보 스키마
+// 해당 문제에 제목을 제출하게 되면 title 필드에 push.
 var Question = new Schema({
 	id    : {type: Number, require: true, unique: true},
 	date  : {type: Date, default: Date.now},
@@ -25,6 +27,10 @@ var Question = new Schema({
 	},
 	titles : [{
 		title: {type: String},
+        _userId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Account'
+        },
 		usernames: [{type: String}]
 	}]
 });

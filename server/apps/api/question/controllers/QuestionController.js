@@ -58,31 +58,48 @@ function read(req, res) {
 	});
 }
 
-function refineDocs(docs) {
-	if (!docs) {
-		return "No Data";
-	}
+function submit(req, res) {
+    Question.find({id: req.query.id}, function(err, docs) {
+        var titleLists = docs[0]["titles"];
 
-	var result = [];
-	for (var i = 0, l = docs.length; i < l; i++) {
-		var doc = docs[i];
-		result.push(refineDoc(doc));
-	}
-	
-	return result;
+        titleLists.push({ title : decodeURIComponent(req.query.title) });
+        Question.update({ id : req.query.id }, { "titles" : titleLists }, function(err, newVal, raw) {
+//            console.log(newVal, raw)
+        });
+    });
+}
+
+function search(req, res) {
+
+}
+
+function refineDocs(docs) {
+    if (!docs) {
+        return "No Data";
+    }
+
+    var result = [];
+    for (var i = 0, l = docs.length; i < l; i++) {
+        var doc = docs[i];
+        result.push(refineDoc(doc));
+    }
+
+    return result;
 }
 
 function refineDoc(doc) {
-	return {
-		id      : doc.id,
-		date    : doc.date,
-		image   : doc.image,
-		time    : doc.time,
-		titles  : doc.title,
-		
-		displayDate : doc.displayDate // virtual
-	}
+    return {
+        id      : doc.id,
+        date    : doc.date,
+        image   : doc.image,
+        time    : doc.time,
+        titles  : doc.title,
+
+        displayDate : doc.displayDate // virtual
+    }
 }
 
 exports.list = list;
 exports.read = read;
+exports.submit = submit;
+exports.search = search;

@@ -36,7 +36,7 @@ function list(req, res) {
    						totalPage : Math.ceil(totalCount / pageSize),
    						items     : refineDocs(docs, page, pageSize)
    				};
-   				
+
    				res.json(result);
  			});
    		}
@@ -54,22 +54,71 @@ function read(req, res) {
 		id: req.query.id
 	}, 
 	function(err, doc) {
+        console.log(doc)
 		res.json(refineDoc(doc));
 	});
 }
 
+/**
+ * 제목 제출 (query: id)
+ */
 function submit(req, res) {
     Question.find({id: req.query.id}, function(err, docs) {
         var titleLists = docs[0]["titles"];
-
+        console.log(titleLists);
         titleLists.push({ title : decodeURIComponent(req.query.title) });
         Question.update({ id : req.query.id }, { "titles" : titleLists }, function(err, newVal, raw) {
-//            console.log(newVal, raw)
+            console.log(newVal, raw)
         });
     });
 }
 
+/**
+ * 제출된 제목 조회
+ */
 function search(req, res) {
+    var lists = [];
+    var id = req.query.id;
+    var idCondition = (id) ? { id : id } : {};
+
+    Question.find(idCondition, {}, { sort : { date : -1 } }, function(err, docs) {
+        var titles = docs[0].titles;
+
+        titles.sort(sortList);
+        res.json(refineTitleInfo(titles));
+    });
+}
+
+/**
+ * 투표하기
+ */
+function poll(req, res) {
+    var user = req.user;
+    var voterId = user.username;
+    var selectedTitleId = req.query.titleId;
+    var idCondition = { id : req.query.id };
+
+    if(!req.query.id || !voterId) {
+        throw "id 또는 voterId가 존재하지 않습니다.";
+    }
+
+    // TODO : 중복 투표 처리
+    Question.findOne(idCondition, function(err, docs) {
+        var titles = docs["titles"];
+
+        for(var i = 0, len = titles.length; i < len; i++) {
+            var title = titles[i];
+            if(title["_id"].toString() === selectedTitleId) {
+                title["users"].push({
+                    name : voterId
+                });
+            }
+        }
+        Question.update(idCondition, { "titles" : titles }, function(err, newVal, raw) {
+//            console.log(newVal, raw)
+        });
+        res.send(refineDoc(docs));
+    });
 
 }
 
@@ -93,13 +142,40 @@ function refineDoc(doc) {
 		date    : doc.date,
 		image   : doc.image,
 		time    : doc.time,
-		titles  : doc.title,
+		titles  : doc.titles,
 		
 		displayDate : doc.displayDate // virtual
 	}
+}
+
+function sortList(list1, list2) {
+
+    var list1Len = list1.length;
+    var list2Len = list2.length;
+    var list1Date = new Date(list1.date).getTime();
+    var list2Date = new Date(list2.date).getTime();
+
+    if(list1Len == list2Len) {
+        if((list1Date > list2Date)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    if(list1 > list2) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function refineTitleInfo(titles) {
+
 }
 
 exports.list = list;
 exports.read = read;
 exports.submit = submit;
 exports.search = search;
+exports.poll = poll;

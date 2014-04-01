@@ -27,11 +27,15 @@ var Question = new Schema({
 	},
 	titles : [{
 		title: {type: String},
-        _userId: {
+        date : {type: Date, default: Date.now},
+        _id: {
             type: Schema.Types.ObjectId,
             ref: 'Account'
         },
-		usernames: [{type: String}]
+		users: [{
+            name : {type: String},
+            date : {type: Date, default: Date.now}
+        }]
 	}]
 });
 

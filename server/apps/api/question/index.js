@@ -10,3 +10,4 @@ app.get('/api/question/list', controller.list);
 app.get('/api/question/read', controller.read);
 app.get('/api/question/submit', controller.submit);
 app.get('/api/question/search', controller.search);
+app.get('/api/question/poll', controller.poll);

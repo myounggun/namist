@@ -65,10 +65,9 @@ function read(req, res) {
 function submit(req, res) {
     Question.find({id: req.query.id}, function(err, docs) {
         var titleLists = docs[0]["titles"];
-        console.log(titleLists);
         titleLists.push({ title : decodeURIComponent(req.query.title) });
         Question.update({ id : req.query.id }, { "titles" : titleLists }, function(err, newVal, raw) {
-            console.log(newVal, raw)
+//            console.log(newVal, raw)
         });
     });
 }
@@ -85,7 +84,8 @@ function search(req, res) {
         var titles = docs[0].titles;
 
         titles.sort(sortList);
-        res.json(refineTitleInfo(titles));
+//        res.json(refineTitleInfo(titles));
+        res.json(titles);
     });
 }
 

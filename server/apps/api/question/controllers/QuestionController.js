@@ -60,7 +60,8 @@ function read(req, res) {
 }
 
 /**
- * 제목 제출 (query: id)
+ * 제목 제출
+ * /api/question/submit?id=12&title=재미없는짤방
  */
 function submit(req, res) {
     Question.find({id: req.query.id}, function(err, docs) {
@@ -74,6 +75,8 @@ function submit(req, res) {
 
 /**
  * 제출된 제목 조회
+ * /api/question/search
+ * /api/question/search?id=5
  */
 function search(req, res) {
     var lists = [];
@@ -91,6 +94,7 @@ function search(req, res) {
 
 /**
  * 투표하기
+ * /api/question/poll?id=5&titleId=5338f7ad6551f167ace928f9
  */
 function poll(req, res) {
     var user = req.user;

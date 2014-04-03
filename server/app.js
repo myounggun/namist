@@ -8,7 +8,8 @@ var express		  = require('express')
   , http		  = require('http')
   , path		  = require('path')
   , mongoose	  = require('mongoose')
-  , autoIncrement = require('mongoose-auto-increment');
+  , autoIncrement = require('mongoose-auto-increment')
+  , engine = require('ejs-locals');
 
 var passport		= require('passport');
 var LocalStrategy	= require('passport-local').Strategy;
@@ -31,9 +32,10 @@ var app = express();
 
 
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 4000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
+app.engine('ejs', engine);
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -58,10 +60,10 @@ if ('development' == app.get('env')) {
 }
 
 app.post('/upload', function(req, res){
-	
+
 	console.log("uploadfile");
 	res.end();
-	
+
 });
 
 http.createServer(app).listen(app.get('port'), function(){

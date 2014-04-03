@@ -23,7 +23,6 @@ function onSignUp (req, res) {
         authByToken.createToken(account, function(err, token) {
             if (err) throw err;
 
-            console.log(token);
             authByToken.sendVerificationEmail(account, token);
 
             passport.authenticate('local')(req, res, function () {

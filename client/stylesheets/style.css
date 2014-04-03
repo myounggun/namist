@@ -1,0 +1,15 @@
+body { text-align:center;font-size:14px; }
+#wrap { margin:0 auto;text-align:left;padding:20px; }
+h1 { font-size:30px; }
+h2 { font-size:26px; }
+h3 { font-size:20px;border-bottom:solid 1px #cdcdcd; }
+h4 { font-size:18px; }
+h5 { font-size:16px; }
+p { margin:10px 0; }
+a { color:#006ac8; }
+#gnb { height:20px;line-height:20px;background-color:#2db400;margin-bottom:10px; }
+#gnb .account { float:right;display:inline;padding:0 20px; }
+#gnb .account li { float:left;display:inline; }
+#gnb .account li a { color:#fff;text-decoration:none;font-size:12px; }
+#gnb .account li a:hover { text-decoration:underline; }
+#gnb .account li.pipe { padding-left:12px;background:url(http://img.naver.net/static/www/2014/sp_rgt2014new.png) no-repeat 6px -123px; }

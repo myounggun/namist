@@ -9,7 +9,8 @@ var express		  = require('express')
   , path		  = require('path')
   , mongoose	  = require('mongoose')
   , autoIncrement = require('mongoose-auto-increment')
-  , engine = require('ejs-locals');
+  , engine = require('ejs-locals')
+  , globalLocals = require('./modules/global-locals');
 
 var passport		= require('passport');
 var LocalStrategy	= require('passport-local').Strategy;
@@ -32,10 +33,17 @@ var app = express();
 
 
 // all environments
+
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('ejs', engine);
+app.use(globalLocals({
+  appname: "제목학원",
+  title: "",
+  user: null
+}));
+
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());

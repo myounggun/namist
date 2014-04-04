@@ -1,0 +1,11 @@
+<div id="gnb">
+<ul class="account">
+<% if (!user) { %>
+	<li><a href="/signin">로그인</a></li>
+	<li class="pipe"><a href="/signup">회원가입</a></li>
+<% } else { %>
+	<li><a href="#"><%= user.username %></a></li>
+	<li class="pipe"><a href="/signout">로그아웃</a></li>
+<% } %>
+</ul>
+</div>

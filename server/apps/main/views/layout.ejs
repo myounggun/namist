@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<title><% if (title) { %><%= title %> | <% } %><%= appname %></title>
+	<link rel="stylesheet" type="text/css" media="all" href="/stylesheets/reset.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="/stylesheets/style.css" />
+</head>
+<body>
+
+<%- partial('gnb') %>
+<div id="wrap">
+
+<%- body %>
+
+</div><!-- //#wrap -->
+
+</body>
+</html>

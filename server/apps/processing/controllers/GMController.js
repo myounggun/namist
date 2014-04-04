@@ -10,6 +10,8 @@ var gm = require('gm')
 var clientPath = path.join(__dirname, '../../../../client/');
 
 function test(req, res) {
+	var title = req.query.title || '소프트웨어 과장';
+	
 	var srcPath = clientPath + 'images/sw.jpg';
 	var dstPath = clientPath + 'images/sw_dst.jpg';
 	
@@ -22,7 +24,7 @@ function test(req, res) {
 	.strokeWidth('1')
 	.font(clientPath + "fonts/BM-HANNA.ttf", 40)
 	.fill('#ffffff')
-	.drawText(10, 40, "소프트웨어 과장")
+	.drawText(10, 40, title)
 	.write(dstPath, function (err) {
 		if (err) console.log(err);
 		

@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Namist Login</title>
+    <title>Sign In</title>
     <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/account/style.css">
@@ -8,7 +8,7 @@
 <body>
 <!--login container-->
 <div id="login-container">
-    <form method="post" action="/signin" id="login-form" class="well">
+    <form method="POST" action="/account/signin" id="login-form" class="well">
         <div class="content-header">
             <h1>Sign In</h1>
             <h5>Login to use your Namist account</h5>
@@ -26,12 +26,12 @@
             <div class="_button-group">
                 <button type="submit" id="btn-login" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-ok-sign"></span>Log In</button>
                 <span>or</span>
-                <a href="/signup" id="create-account">Sign up for Namist</a>
+                <a href="/account/signup" id="create-account">Sign up for Namist</a>
             </div>
         </div>
         <hr>
         <div class="content-footer">
-            <a href="/findPassword" id="forgot-password">Forgot your password?</a>
+            <a href="/account/resetPassword" id="reset-password">Forgot your password?</a>
         </div>
     </form>
 </div>

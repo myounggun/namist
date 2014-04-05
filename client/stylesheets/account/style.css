@@ -15,13 +15,19 @@ body {
     width: 300px;
 }
 
+#find-password-container {
+    width: 400px;
+}
+
 #login-form .content-header,
-#signup-form .content-header {
+#signup-form .content-header,
+#find-password-form .content-header {
     text-align: center;
 }
 
 #login-form .content-body .input-group,
-#signup-form .content-body .input-group {
+#signup-form .content-body .input-group,
+#find-password-form .content-body .input-group {
     margin-bottom: 10px;
 }
 
@@ -29,7 +35,8 @@ body {
     text-align: center;
 }
 
-#signup-form .content-body ._button-group {
+#signup-form .content-body ._button-group,
+#find-password-form .content-body ._button-group {
     text-align: center;
     margin-top: 20px;
 }
@@ -49,12 +56,37 @@ body {
     margin-right: 10px;
 }
 
+#profile-container button .glyphicon,
 #login-form button .glyphicon,
-#signup-form button .glyphicon {
+#signup-form button .glyphicon,
+#find-password-form button .glyphicon {
     margin-right: 5px;
 }
 
-#login-form .content-footer {
+#login-form .content-footer,
+#find-password-form .content-footer {
     text-align: center;
     font-size: 12px;
+}
+
+#profile-container .panel-user-info {
+    margin-bottom: 5px;
+}
+
+#profile-container .panel-heading .glyphicon,
+#profile-container .panel-user-info .glyphicon {
+    margin-right: 5px;
+}
+
+#profile-container .panel-user-info .info {
+    font-size: 12px;
+}
+
+#profile-container h1 {
+    text-align: center;
+}
+
+#profile-container button {
+    margin-top: 5px;
+    float: right;
 }

@@ -32,14 +32,14 @@ app.post('/account/logout', function (req, res) {
 
 // Profile
 app.get('/account/profile', function (req, res) {
-    res.render('formProfile', {
-        username: req.user.username,
-        email: req.user.email,
-        id: req.user.id
-    });
+    if (req.user) {
+        res.render('formProfile', {
+            user: req.user
+        });
+    } else {
+        res.redirect('/');
+    }
 });
 
 // Delete Account
-app.post('/account/delete', function (req, res) {
-    controller.delete;
-});
+app.delete('/account/delete/:id', controller.delete);

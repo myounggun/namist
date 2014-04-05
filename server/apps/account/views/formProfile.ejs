@@ -8,26 +8,36 @@
 <body>
 <!--profile container-->
 <div id="profile-container">
-    <div class="page-header">
-        <h1>Profile</h1>
-    </div>
-    <div class="panel panel-default">
-        <div class="panel-heading"><span class="glyphicon glyphicon-tag"></span>Local</div>
-        <div class="panel-body">
-            <div class="panel-user-info">
-                <span class="glyphicon glyphicon-user"></span><span class="info"><%=username%></span>
-            </div>
-            <div class="panel-user-info">
-                <span class="glyphicon glyphicon-envelope"></span><span class="info"><%=email%></span>
-            </div>
-            <button type="button" id="btn-unlink" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-remove-sign"></span>Unlink</button>
+    <form method="POST" action="/account/delete/<%=user._id%>" id="profile-form">
+        <div class="page-header">
+            <h1>Profile</h1>
         </div>
-    </div>
+        <div class="panel panel-default">
+            <div class="panel-heading"><span class="glyphicon glyphicon-tag"></span>Local</div>
+            <div class="panel-body">
+                <div class="panel-user-info">
+                    <span class="glyphicon glyphicon-user"></span><span class="info"><%=user.username%></span>
+                </div>
+                <div class="panel-user-info">
+                    <span class="glyphicon glyphicon-envelope"></span><span class="info"><%=user.email%></span>
+                </div>
+                <div class="panel-user-info">
+                    <% if (user.authentication) { %>
+                    <span class="glyphicon glyphicon-ok"></span><span class="info">인증 완료</span>
+                    <% } else { %>
+                    <span class="glyphicon glyphicon-remove"></span><span class="info">인증 미완료</span>
+                    <% } %>
+                </div>
+                <input type="hidden" value="DELETE" name="_method" />
+                <button type="button" id="btn-unlink" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-remove-sign"></span>Unlink</button>
+            </div>
+        </div>
+    </form>
 </div>
 <!--profile container-->
 <!-- Modal -->
 <div class="modal fade" id="unlinkModal" tabindex="-1" role="dialog" aria-labelledby="unlinkModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -37,8 +47,7 @@
                 <p>Your account has been deactivated from the Namist and will be permanently deleted.</p>
             </div>
             <div class="modal-footer">
-                    <button type="button" id="btn-unlink-ok" class="btn btn-default" data-dismiss="modal" data-id="<%=id%>">Ok</button>
-                </form>
+                <button type="submit" id="btn-unlink-ok" class="btn btn-default" data-dismiss="modal" data-doc-id="<%=user._id%>">Ok</button>
             </div>
         </div>
     </div>
@@ -53,25 +62,7 @@
         });
 
         $('#btn-unlink-ok').click(function () {
-            $.ajax({
-                url: '/delete',
-                type: 'post',
-                data: {
-                    id: $(this).data('id')
-                },
-                success: function (e) {
-                    var code = e.code;
-
-                    if (code == 'S') {
-                        console.log('SS');
-                    } else {
-                        console.log('EE');
-                    }
-                },
-                error: function () {
-                    console.log('Oops !!');
-                }
-            })
+            $('#profile-form').submit();
         });
     });
 </script>

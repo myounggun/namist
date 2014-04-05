@@ -84,21 +84,20 @@ function onFind (req, res) {
 }
 
 function onDelete (req, res) {
-    var objectId = req.params.id;
+    var id = req.params.id;
 
     Account.remove({
-        _id: objectId
+        _id: id
     }, function (err, resCode) {
         if (err) {
             throw err;
         }
 
         if (resCode) {
-            res.write({code: 'S'});
-            res.end();
+            req.logout();
+            res.redirect('/');
         } else {
-            res.write({code: 'E'});
-            res.end();
+            console.log('삭제를 실패했습니다.');
         }
     })
 }

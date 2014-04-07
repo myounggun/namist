@@ -91,10 +91,19 @@ $(function() {
 
     $("#username, #email").each(function(i, v) {
         var el = $(this),
-            id = el.attr("id"),
-            data = {};
+            id = el.attr("id");
 
-        data[id] =
+        el.on("mouseover", function() {
+            el.css({
+                "border": "dashed 1px #999",
+                "padding": "2px"
+            });
+        }).on("mouseout", function() {
+            el.css({
+                "border": "0 none",
+                "padding": "auto"
+            });
+        });
 
         el.editable({
             success: function(fieldname, oldValue) {

@@ -155,7 +155,7 @@ function onProfileEdit(req, res) {
         };
 
     if (Object.keys(req.body).length === 0) {
-        return res.json({
+        res.json({
             status: 'ok',
             message: "not modified"
         });
@@ -164,13 +164,26 @@ function onProfileEdit(req, res) {
             update[key] = req.body[key];
         }
 
-        Account.update(conditions, update, updateOptions, function(err, numAffected) {
+        Account.findOne(req.body, function (err, user) {
             if (err) throw err;
 
-            return res.json({
-                status: 'ok',
-                message: numAffected +" field(s) modified."
-            });
+            var keys = Object.keys(req.body);
+
+            if (user) {
+                res.json({
+                    status: "error",
+                    message: "이미 중복된 '"+ keys[0] +"'이 존재합니다."
+                });
+            } else {
+                Account.update(conditions, update, updateOptions, function(err, numAffected) {
+                    if (err) throw err;
+
+                    res.json({
+                        status: 'ok',
+                        message: numAffected +" field(s) modified."
+                    });
+                });
+            }
         });
     }
 }

@@ -1,0 +1,49 @@
+<% layout('layout') -%>
+<div id="left-wrap">
+<% if (user) { %>
+	<h4>환영합니다! <strong><%= user.username %></strong>님</h4><br /><br />
+
+	<h5>관리자 페이지</h5>
+	<ul class="menu">
+		<li><a href="/admin/question">짤방 목록</a></li>
+		<li><a href="/admin/question/add">짤방 추가</a></li>
+	</ul>
+
+	<h5>페이지를 추가해주세요</h5>
+	<ul class="menu">
+		<li><a href="#">페이지 1</a></li>
+		<li><a href="#">페이지 2</a></li>
+	</ul>
+<% } else { %>
+	<h4>로그인 안함? 가입하던가..</h4>
+	<ul class="menu">
+		<li><a href="/signin">로그인</a></li>
+		<li><a href="/signup">회원가입</a></li>
+	</ul>
+<% } %>
+</div><!-- //#left-wrap -->
+
+<%
+	var preview = [
+		"http://cfile9.uf.tistory.com/image/232DEC375258BC910CFDBD",
+		"http://cfile2.uf.tistory.com/image/273011375258BC910AE8BC",
+		"http://cfile9.uf.tistory.com/image/274043375258BC9203AFBC",
+		"http://cfile25.uf.tistory.com/image/2622AB375258BC9211A4AB",
+		"http://cfile5.uf.tistory.com/image/241150375258BC9319D9CA",
+		"http://cfile8.uf.tistory.com/image/22327E375258BC930AFD37",
+		"/images/sw.jpg"
+	], idx = 0;
+
+	idx = Math.floor(Math.random() * preview.length);
+%>
+<div id="content-wrap">
+	<h3>제목학원은 수강생 여러분을 기다립니다!</h3>
+
+	<div class="preview">
+		<img src="<%= preview[idx] %>" alt="제목학원 우수작" />
+	</div>
+</div><!-- //#content-wrap -->
+
+<div id="footer-wrap">
+	Copyright(c) namist
+</div><!-- //#footer-wrap -->

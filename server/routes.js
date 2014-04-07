@@ -9,6 +9,7 @@ module.exports = function (app) {
          require('./apps/verification'),
          require('./apps/api/question'), // 문제 출제 API 샘플
          require('./apps/api/upload'),
+         require('./apps/processing'),
          require('./apps/tools') // 웹에서 접근가능한 편의상의 운영툴
      ];
 

@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+	<form method='post' action="/api/upload/image" enctype='multipart/form-data'>
+		<input type='file' name='image'/>
+		<input type='submit' />
+	</form>
+	<ul>
+	<% for(var i = 0; i < list.length ; ++i ){%>
+		<li>
+			<span>
+				<img width="70" src="/api/viewImage/<%-list[i].name%>"/>
+				<a href="/api/viewImage/<%-list[i].name%>"><%-list[i].name%></a>
+				<a href="/api/deleteImage/<%-list[i].name%>">Delete</a>
+			</span>
+		</li>
+	<% }%>
+	</ul>
+</body>
+</html>

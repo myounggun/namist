@@ -25,7 +25,7 @@ app.post('/account/signup', controller.signup);
 //app.post('/account/resetPassword', controller.find);
 
 // Logout
-app.post('/account/logout', function (req, res) {
+app.get('/account/logout', function (req, res) {
     req.logout();
     res.redirect('/');
 });

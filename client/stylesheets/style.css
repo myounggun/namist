@@ -14,9 +14,9 @@ a { color:#006ac8; }
 #gnb .account li a:hover { text-decoration:underline; }
 #gnb .account li.pipe { padding-left:12px;background:url(http://img.naver.net/static/www/2014/sp_rgt2014new.png) no-repeat 6px -123px; }
 
-#left-wrap { position:absolute;top:0;left:0;bottom:30px;width:280px;border:solid 1px red;padding:10px; }
-#content-wrap { position:absolute;top:0;left:300px;bottom:30px;right:0;border:solid 1px red;padding:10px; }
-#footer-wrap { position:absolute;left:0;right:0;bottom:0;height:30px;border:solid 1px red;padding:0 10px;line-height:30px; }
+#left-wrap { position:absolute;top:0;left:0;bottom:30px;width:280px;padding:10px;overflow:hidden;overflow-y:auto;border-right:solid 1px #eaeaea; }
+#content-wrap { position:absolute;top:0;left:300px;bottom:30px;right:0;padding:10px;overflow:hidden;overflow-y:auto; }
+#footer-wrap { position:absolute;left:0;right:0;bottom:0;height:30px;border-top:solid 1px #eaeaea;padding:0 10px;line-height:30px;overflow:hidden; }
 
 #left-wrap h5 { border-bottom:solid 1px #cdcdcd; }
 ul.menu { margin-left:15px;padding:10px 0;margin-bottom:20px; }

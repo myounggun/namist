@@ -41,5 +41,7 @@ app.get('/account/profile', function (req, res) {
     }
 });
 
+app.put('/account/profile/edit', controller.profileEdit);
+
 // Delete Account
 app.delete('/account/delete/:id', controller.delete);

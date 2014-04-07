@@ -100,6 +100,8 @@ function onSignUp (req, res) {
 function onDelete (req, res) {
     var id = req.params.id;
 
+    console.log(id);
+
     Account.remove({
         _id: id
     }, function (err, resCode) {
@@ -124,7 +126,6 @@ function sendVerificationEMail (req, res, user) {
             throw err;
         }
 
-        console.log(token);
         authByToken.sendVerificationEmail(user, token);
 
         passport.authenticate('local')(req, res, function () {
@@ -133,7 +134,49 @@ function sendVerificationEMail (req, res, user) {
     });
 }
 
+function onProfileEdit(req, res) {
+    var user = req.user;
+
+    if (!user) {
+        return res.json({
+            status: "error",
+            message: "bad access."
+        });
+    }
+
+    var conditions = {
+            _id: user._id
+        },
+        update = {
+            authentication: false
+        },
+        updateOptions = {
+            multi: true
+        };
+
+    if (Object.keys(req.body).length === 0) {
+        return res.json({
+            status: 'ok',
+            message: "not modified"
+        });
+    } else {
+        for (var key in req.body) {
+            update[key] = req.body[key];
+        }
+
+        Account.update(conditions, update, updateOptions, function(err, numAffected) {
+            if (err) throw err;
+
+            return res.json({
+                status: 'ok',
+                message: numAffected +" field(s) modified."
+            });
+        });
+    }
+}
+
 exports.signup = onSignUp;
 exports.signin = onSignIn;
 exports.delete = onDelete;
+exports.profileEdit = onProfileEdit;
 //exports.find = onFind;

@@ -15,10 +15,10 @@
             <div class="panel-heading"><span class="glyphicon glyphicon-tag"></span>Local</div>
             <div class="panel-body">
                 <div class="panel-user-info">
-                    <span class="glyphicon glyphicon-user"></span><span class="info"><%=user.username%></span>
+                    <span class="glyphicon glyphicon-user"></span><span id="username" data-type="text" class="info"><%=user.username%></span>
                 </div>
                 <div class="panel-user-info">
-                    <span class="glyphicon glyphicon-envelope"></span><span class="info"><%=user.email%></span>
+                    <span class="glyphicon glyphicon-envelope"></span><span id="email" class="info"><%=user.email%></span>
                 </div>
                 <div class="panel-user-info">
                     <% if (user.authentication) { %>
@@ -35,6 +35,8 @@
                 </div>
             </div>
         </div>
+
+        <input id="form-method" type="hidden" name="_method" value="POST" />
     </form>
 </div>
 <!--profile container-->
@@ -60,18 +62,63 @@
 <script src="/js/lib/bootstrap.min.js"></script>
 <script type="application/javascript">
     $(document).ready(function () {
-        $('#btn-unlink').click(function () {
+        $('#btn-unlink').click(function (e) {
+            e.preventDefault();
+
             $('#unlinkModal').modal({show: true, keyboard: true});
         });
 
-        $('#btn-unlink-ok').click(function () {
+        $('#btn-unlink-ok').click(function (e) {
+            e.preventDefault();
+
+            $("#form-method").val("delete");
             $('#profile-form').submit();
         });
 
-        $('#btn-re-verify').click(function () {
+        $('#btn-re-verify').click(function (e) {
+            e.preventDefault();
 
+            location.href = "/send/verifytoken";
         });
     });
 </script>
+<% if (user.authentication) { %>
+<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script>
+$(function() {
+    $.fn.editable.defaults.mode = 'inline';
+
+    $("#username, #email").each(function(i, v) {
+        var el = $(this),
+            id = el.attr("id"),
+            data = {};
+
+        data[id] =
+
+        el.editable({
+            success: function(fieldname, oldValue) {
+                return function(res, newValue) {
+                    if (oldValue === newValue) return;
+
+                    var data = {};
+                    data[fieldname] = newValue;
+
+                    $.ajax({
+                        url: '/account/profile/edit',
+                        type: "PUT",
+                        data: data,
+                        success: function(result) {
+                            console.log(result);
+                        }
+                    })
+                }
+            }(id, el.text())
+        });
+    });
+});
+</script>
+<% } %>
+
 </body>
 </html>

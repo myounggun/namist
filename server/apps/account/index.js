@@ -6,20 +6,40 @@ var express = require('express'),
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
-// Show the login form
-app.get('/signin', function (req, res) {
-    res.render('formSignIn');
+// Sign In
+app.get('/account/signin', function (req, res) {
+    res.render('formSignIn', {message: null});
+});
+app.post('/account/signin', controller.signin);
+
+// Sign Up
+app.get('/account/signup', function (req, res) {
+    res.render('formSignUp', {message: null});
+});
+app.post('/account/signup', controller.signup);
+
+// Reset Password
+//app.get('/account/resetPassword', function (req, res) {
+//    res.render('formResetPassword');
+//});
+//app.post('/account/resetPassword', controller.find);
+
+// Logout
+app.post('/account/logout', function (req, res) {
+    req.logout();
+    res.redirect('/');
 });
 
-// Process the login form
-app.post('/signin', passport.authenticate('local', {
-    failureRedirect: '/signin'
-}), controller.signin);
-
-// Show the sign up form
-app.get('/signup', function (req, res) {
-    res.render('formSignUp');
+// Profile
+app.get('/account/profile', function (req, res) {
+    if (req.user) {
+        res.render('formProfile', {
+            user: req.user
+        });
+    } else {
+        res.redirect('/');
+    }
 });
 
-// Process the sign up form
-app.post('/signup', controller.signup);
+// Delete Account
+app.delete('/account/delete/:id', controller.delete);

@@ -10,51 +10,71 @@ body {
 /*---------------[MAIN LAYOUT INFO]---------------*/
 /*------------------------------------------------*/
 
-#login-container,
-#signup-container {
-    width: 300px;
+#profile-container {
+    width: 100%
 }
 
-#login-form .content-header,
-#signup-form .content-header {
+#profile-container h1 {
     text-align: center;
 }
 
-#login-form .content-body .input-group,
-#signup-form .content-body .input-group {
-    margin-bottom: 10px;
+#profile-container button {
+    margin-top: 5px;
+    margin-left: 5px;
+    float: right;
 }
 
-#login-form .content-body ._button-group {
-    text-align: center;
-}
-
-#signup-form .content-body ._button-group {
-    text-align: center;
-    margin-top: 20px;
-}
-
-#login-form .content-body span {
+#sign-in-container .content-body span {
     font-size: 12px;
 }
 
-#login-form .content-body a {
+#sign-in-container .content-body a {
     font-size: 12px;
     margin-left: 5px;
 }
 
-#login-form button {
+#sign-in-container button {
     width: 100px;
     padding: 3px 5px 3px 5px;
     margin-right: 10px;
 }
 
-#login-form button .glyphicon,
-#signup-form button .glyphicon {
+.account-container {
+    width: 300px;
+}
+
+.content-header {
+    text-align: center;
+}
+
+.content-body .alert {
+    font-size: 10px;
+    text-align: center;
+}
+
+.input-group {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.button-group {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.glyphicon {
     margin-right: 5px;
 }
 
-#login-form .content-footer {
+.panel-user-info {
+    margin-bottom: 5px;
+}
+
+.panel-user-info .info {
+    font-size: 12px;
+}
+
+.content-footer {
     text-align: center;
     font-size: 12px;
 }

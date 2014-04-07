@@ -1,20 +1,22 @@
 <html>
 <head>
-    <title>Namist Login</title>
+    <title>Sign In</title>
     <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/account/style.css">
 </head>
 <body>
-<!--login container-->
-<div id="login-container">
-    <form method="post" action="/signin" id="login-form" class="well">
+<div id="sign-in-container" class="account-container">
+    <form method="POST" action="/account/signin" id="login-form" class="well">
         <div class="content-header">
             <h1>Sign In</h1>
             <h5>Login to use your Namist account</h5>
         </div>
         <hr>
         <div class="content-body">
+            <% if (message && message.length > 0) { %>
+            <div class="alert alert-warning"><%=message%></div>
+            <% } %>
             <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
                 <input type="text" class="form-control required" placeholder="Username" name="username" maxlength="255" required="required"></input>
@@ -23,19 +25,18 @@
                 <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
                 <input type="password" class="form-control required" placeholder="Password" name="password" maxlength="128" required="required"></input>
             </div>
-            <div class="_button-group">
-                <button type="submit" id="btn-login" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-ok-sign"></span>Log In</button>
+            <div class="button-group">
+                <button type="submit" id="btn-signin" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-ok-sign"></span>Sign In</button>
                 <span>or</span>
-                <a href="/signup" id="create-account">Sign up for Namist</a>
+                <a href="/account/signup">Sign up for Namist</a>
             </div>
         </div>
         <hr>
         <div class="content-footer">
-            <a href="/findPassword" id="forgot-password">Forgot your password?</a>
+            <a href="/account/resetPassword">Forgot your password?</a>
         </div>
     </form>
 </div>
-<!--login container-->
 <script src="/js/lib/jquery-1.11.0.min.js"></script>
 <script src="/js/lib/bootstrap.min.js"></script>
 </body>

@@ -1,6 +1,34 @@
 var passport = require('passport'),
     Account = require('../Account'),
-    Tokenizer = require('../../verification/Tokenizer.js');
+    Tokenizer = require('../../verification/Tokenizer.js'),
+    nodemailer = require('nodemailer'),
+    mail = nodemailer.mail;
+
+function onSignIn (req, res) {
+    passport.authenticate('local', function (err, user) {
+        if (err) {
+            throw err;
+        }
+
+        if (!user) {
+            return res.render('formSignIn', {
+                message: "Sorry, we didn't recognize your sign-in details. Please check your user name and password, then try again."
+            });
+        }
+
+        req.logIn(user, function (err) {
+            if (err) {
+                throw err;
+            }
+
+            if (user.authentication) {
+                res.redirect('/');
+            } else {
+                res.redirect('/account/profile');
+            }
+        });
+    })(req, res);
+}
 
 function onSignUp (req, res) {
     var username = req.body.username,
@@ -12,30 +40,100 @@ function onSignUp (req, res) {
         email: email
     });
 
-    Account.register(account, password, function (err, account) {
+    Account.register(account, password, function (err, user) {
         if (err) {
-            console.log(err);
-            res.render('formSignUp', {account: account});
+            var message = '';
+
+            switch (err.name) {
+                case 'BadRequestError':
+                    message = err.message;
+                    break;
+                case 'MongoError':
+                    if (err.code == 11000) {
+                        message = 'User already exists with email';
+                    }
+                    break;
+            }
+
+            return res.render('formSignUp', {message: message});
         }
 
-        var authByToken = Tokenizer(req, res);
+        sendVerificationEMail(req, res, user);
+    });
+}
 
-        authByToken.createToken(account, function(err, token) {
-            if (err) throw err;
+//function onFind (req, res) {
+//    var username = req.body.username,
+//        email = req.body.email;
+//
+//    Account.findOne({username: username}, function (err, user) {
+//        if (err) {
+//            console.log(err);
+//        }
+//
+//        if (user) {
+//            var o = JSON.parse(JSON.stringify(user)),
+//                savedEMail = o.email;
+//
+//            if (savedEMail === email) {
+//                var mailBody = [
+//                    '<strong>Your password is</strong> <br /><br />'
+//                ].join('');
+//
+//                mail({
+//                    from: 'namist <noreply@namist.com>',
+//                    to: username +' <'+ email +'>',
+//                    subject: '[Namist] Your namist password',
+//                    html: mailBody
+//                });
+//            } else {
+//                // 사용자 정보가 틀릴 때
+//                res.send('사용자 정보가 틀립니다.');
+//            }
+//        } else {
+//            // 해당 이름의 사용자가 없을 때
+//            res.send('사용자가 없습니다.');
+//        }
+//    });
+//}
 
-            authByToken.sendVerificationEmail(account, token);
+function onDelete (req, res) {
+    var id = req.params.id;
 
-            passport.authenticate('local')(req, res, function () {
-                res.send('Send verification email by token \''+ token +'\'. Complete!');
-            });
+    Account.remove({
+        _id: id
+    }, function (err, resCode) {
+        if (err) {
+            throw err;
+        }
+
+        if (resCode) {
+            req.logout();
+            res.redirect('/');
+        } else {
+            console.log('삭제를 실패했습니다.');
+        }
+    })
+}
+
+function sendVerificationEMail (req, res, user) {
+    var authByToken = Tokenizer(req, res);
+
+    authByToken.createToken(user, function (err, token) {
+        if (err) {
+            throw err;
+        }
+
+        console.log(token);
+        authByToken.sendVerificationEmail(user, token);
+
+        passport.authenticate('local')(req, res, function () {
+            res.send('Send verification email by token \''+ token +'\'. Complete!');
         });
     });
 }
 
-function onSignIn (req, res) {
-    // Todo: 로그인 과정을 마치면 사용자 정보를 홈으로 전달
-    res.redirect('/');
-}
-
 exports.signup = onSignUp;
 exports.signin = onSignIn;
+exports.delete = onDelete;
+//exports.find = onFind;

@@ -1,0 +1,77 @@
+<html>
+<head>
+    <title>Profile</title>
+    <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/account/style.css">
+</head>
+<body>
+<div id="profile-container" class="account-container">
+    <form method="POST" action="/account/delete/<%=user._id%>" id="profile-form">
+        <div class="page-header">
+            <h1>Profile</h1>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading"><span class="glyphicon glyphicon-tag"></span>Local</div>
+            <div class="panel-body">
+                <div class="panel-user-info">
+                    <span class="glyphicon glyphicon-user"></span><span class="info"><%=user.username%></span>
+                </div>
+                <div class="panel-user-info">
+                    <span class="glyphicon glyphicon-envelope"></span><span class="info"><%=user.email%></span>
+                </div>
+                <div class="panel-user-info">
+                    <% if (user.authentication) { %>
+                    <span class="glyphicon glyphicon-ok"></span><span class="info">Authorized</span>
+                    <% } else { %>
+                    <span class="glyphicon glyphicon-remove"></span><span class="info">Not Authorized</span>
+                    <% } %>
+                </div>
+                <div class="panel-user-button">
+                    <button type="button" id="btn-unlink" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-remove-sign"></span>Unlink</button>
+                    <% if (!user.authentication) { %>
+                    <button type="button" id="btn-re-verify" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-envelope"></span>Okay, send me a verification email</button>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--profile container-->
+<!-- Modal -->
+<div class="modal fade" id="unlinkModal" tabindex="-1" role="dialog" aria-labelledby="unlinkModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="unlinkModalLabel">Permanently Delete Account</h4>
+            </div>
+            <div class="modal-body">
+                <p>Your account has been deactivated from the Namist and will be permanently deleted.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="btn-unlink-ok" class="btn btn-default" data-dismiss="modal" data-doc-id="<%=user._id%>">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<script src="/js/lib/jquery-1.11.0.min.js"></script>
+<script src="/js/lib/bootstrap.min.js"></script>
+<script type="application/javascript">
+    $(document).ready(function () {
+        $('#btn-unlink').click(function () {
+            $('#unlinkModal').modal({show: true, keyboard: true});
+        });
+
+        $('#btn-unlink-ok').click(function () {
+            $('#profile-form').submit();
+        });
+
+        $('#btn-re-verify').click(function () {
+
+        });
+    });
+</script>
+</body>
+</html>

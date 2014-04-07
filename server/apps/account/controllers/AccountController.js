@@ -164,26 +164,33 @@ function onProfileEdit(req, res) {
             update[key] = req.body[key];
         }
 
-        Account.findOne(req.body, function (err, user) {
-            if (err) throw err;
+        Account.update(conditions, update, updateOptions, function(err, numAffected) {
+            if (err) {
+                var message = err.message;
 
-            var keys = Object.keys(req.body);
+                switch (err.name) {
+                    case 'MongoError':
+                        if (message.indexOf("$email") > -1) {
+                            message = '중복된 email이 있습니다.';
+                        } else if (message.indexOf("$username") > -1) {
+                            message = '중복된 username이 있습니다.';
+                        } else {
+                            message = "알수없는 오류";
+                        }
 
-            if (user) {
-                res.json({
+                        break;
+                }
+
+                return res.json({
                     status: "error",
-                    message: "이미 중복된 '"+ keys[0] +"'이 존재합니다."
-                });
-            } else {
-                Account.update(conditions, update, updateOptions, function(err, numAffected) {
-                    if (err) throw err;
-
-                    res.json({
-                        status: 'ok',
-                        message: numAffected +" field(s) modified."
-                    });
+                    message: message
                 });
             }
+
+            res.json({
+                status: 'ok',
+                message: numAffected +" field(s) modified."
+            });
         });
     }
 }

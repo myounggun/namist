@@ -6,8 +6,7 @@
     <link rel="stylesheet" href="/stylesheets/account/style.css">
 </head>
 <body>
-<!--profile container-->
-<div id="profile-container">
+<div id="profile-container" class="account-container">
     <form method="POST" action="/account/delete/<%=user._id%>" id="profile-form">
         <div class="page-header">
             <h1>Profile</h1>
@@ -23,13 +22,17 @@
                 </div>
                 <div class="panel-user-info">
                     <% if (user.authentication) { %>
-                    <span class="glyphicon glyphicon-ok"></span><span class="info">인증 완료</span>
+                    <span class="glyphicon glyphicon-ok"></span><span class="info">Authorized</span>
                     <% } else { %>
-                    <span class="glyphicon glyphicon-remove"></span><span class="info">인증 미완료</span>
+                    <span class="glyphicon glyphicon-remove"></span><span class="info">Not Authorized</span>
                     <% } %>
                 </div>
-                <input type="hidden" value="DELETE" name="_method" />
-                <button type="button" id="btn-unlink" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-remove-sign"></span>Unlink</button>
+                <div class="panel-user-button">
+                    <button type="button" id="btn-unlink" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-remove-sign"></span>Unlink</button>
+                    <% if (!user.authentication) { %>
+                    <button type="button" id="btn-re-verify" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-envelope"></span>Okay, send me a verification email</button>
+                    <% } %>
+                </div>
             </div>
         </div>
     </form>
@@ -63,6 +66,10 @@
 
         $('#btn-unlink-ok').click(function () {
             $('#profile-form').submit();
+        });
+
+        $('#btn-re-verify').click(function () {
+
         });
     });
 </script>

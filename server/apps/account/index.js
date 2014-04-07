@@ -8,21 +8,21 @@ app.set('view engine', 'ejs');
 
 // Sign In
 app.get('/account/signin', function (req, res) {
-    res.render('formSignIn');
+    res.render('formSignIn', {message: null});
 });
 app.post('/account/signin', controller.signin);
 
 // Sign Up
 app.get('/account/signup', function (req, res) {
-    res.render('formSignUp');
+    res.render('formSignUp', {message: null});
 });
 app.post('/account/signup', controller.signup);
 
 // Reset Password
-app.get('/account/resetPassword', function (req, res) {
-    res.render('formResetPassword');
-});
-app.post('/account/resetPassword', controller.find);
+//app.get('/account/resetPassword', function (req, res) {
+//    res.render('formResetPassword');
+//});
+//app.post('/account/resetPassword', controller.find);
 
 // Logout
 app.post('/account/logout', function (req, res) {

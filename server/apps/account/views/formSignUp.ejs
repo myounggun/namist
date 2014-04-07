@@ -6,8 +6,7 @@
     <link rel="stylesheet" href="/stylesheets/account/style.css">
 </head>
 <body>
-<!--signup container-->
-<div id="signup-container">
+<div class="account-container">
     <form method="POST" action="/account/signup" id="signup-form" class="well">
         <div class="content-header">
             <h1>Sign Up</h1>
@@ -15,6 +14,9 @@
         </div>
         <hr>
         <div class="content-body">
+            <% if (message && message.length > 0) { %>
+            <div class="alert alert-warning"><%=message%></div>
+            <% } %>
             <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
                 <input type="text" id="email" class="form-control required" placeholder="Your email address" name="email" maxlength="255" required="required"></input>
@@ -27,21 +29,20 @@
                 <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
                 <input type="password" class="form-control required" placeholder="New Password" name="password" maxlength="128" required="required"></input>
             </div>
-            <div class="_button-group">
+            <div class="button-group">
                 <button type="submit" id="btn-signup-cancel" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-remove-sign"></span>Cancel</button>
                 <button type="submit" id="btn-signup" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-ok-sign"></span>Sign Up</button>
             </div>
         </div>
     </form>
 </div>
-<!--signup container-->
 <!-- Modal -->
-<div class="modal fade" id="emailErrorModal" tabindex="-1" role="dialog" aria-labelledby="emailErrorModal" aria-hidden="true">
+<div class="modal fade" id="modal-email-error" tabindex="-1" role="dialog" aria-labelledby="modal-email-error" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="emailErrorModal-Header">Sorry!</h4>
+                <h4 class="modal-title" id="modal-email-error-header">Sorry!</h4>
             </div>
             <div class="modal-body">
                 <p>Please enter a valid email address.</p>
@@ -71,7 +72,7 @@
             if (reg.test(value)) {
                 return true;
             } else {
-                $('#emailErrorModal').modal({show: true, keyboard: true});
+                $('#modal-email-error').modal({show: true, keyboard: true});
                 return false;
             }
         });

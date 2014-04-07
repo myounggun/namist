@@ -1,6 +1,3 @@
-/**
- *
- */
 var mongoose	= require('mongoose'),
 	Schema		= mongoose.Schema,
 	passport	= require('passport-local-mongoose');

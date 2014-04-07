@@ -11,20 +11,22 @@ function onSignIn (req, res) {
         }
 
         if (!user) {
-            res.render('formSignIn');
-        }
-
-        if (user.authentication) {
-            req.logIn(user, function (err) {
-                if (err) {
-                    throw err;
-                }
-
-                res.redirect('/account/profile');
+            return res.render('formSignIn', {
+                message: "Sorry, we didn't recognize your sign-in details. Please check your user name and password, then try again."
             });
-        } else {
-            res.redirect('/account/verify');
         }
+
+        req.logIn(user, function (err) {
+            if (err) {
+                throw err;
+            }
+
+            if (user.authentication) {
+                res.redirect('/');
+            } else {
+                res.redirect('/account/profile');
+            }
+        });
     })(req, res);
 }
 
@@ -40,48 +42,60 @@ function onSignUp (req, res) {
 
     Account.register(account, password, function (err, user) {
         if (err) {
-            console.log(err);
-            res.render('formSignUp');
+            var message = '';
+
+            switch (err.name) {
+                case 'BadRequestError':
+                    message = err.message;
+                    break;
+                case 'MongoError':
+                    if (err.code == 11000) {
+                        message = 'User already exists with email';
+                    }
+                    break;
+            }
+
+            return res.render('formSignUp', {message: message});
         }
 
         sendVerificationEMail(req, res, user);
     });
 }
 
-function onFind (req, res) {
-    var username = req.body.username,
-        email = req.body.email;
-
-    Account.findOne({username: username}, function (err, user) {
-        if (err) {
-            console.log(err);
-        }
-
-        if (user) {
-            var o = JSON.parse(JSON.stringify(user)),
-                savedEMail = o.email;
-
-            if (savedEMail === email) {
-                var mailBody = [
-                    '<strong>Your password is</strong> <br /><br />'
-                ].join('');
-
-                mail({
-                    from: 'namist <noreply@namist.com>',
-                    to: username +' <'+ email +'>',
-                    subject: '[Namist] Your namist password',
-                    html: mailBody
-                });
-            } else {
-                // 사용자 정보가 틀릴 때
-                res.send('사용자 정보가 틀립니다.');
-            }
-        } else {
-            // 해당 이름의 사용자가 없을 때
-            res.send('사용자가 없습니다.');
-        }
-    });
-}
+//function onFind (req, res) {
+//    var username = req.body.username,
+//        email = req.body.email;
+//
+//    Account.findOne({username: username}, function (err, user) {
+//        if (err) {
+//            console.log(err);
+//        }
+//
+//        if (user) {
+//            var o = JSON.parse(JSON.stringify(user)),
+//                savedEMail = o.email;
+//
+//            if (savedEMail === email) {
+//                var mailBody = [
+//                    '<strong>Your password is</strong> <br /><br />'
+//                ].join('');
+//
+//                mail({
+//                    from: 'namist <noreply@namist.com>',
+//                    to: username +' <'+ email +'>',
+//                    subject: '[Namist] Your namist password',
+//                    html: mailBody
+//                });
+//            } else {
+//                // 사용자 정보가 틀릴 때
+//                res.send('사용자 정보가 틀립니다.');
+//            }
+//        } else {
+//            // 해당 이름의 사용자가 없을 때
+//            res.send('사용자가 없습니다.');
+//        }
+//    });
+//}
 
 function onDelete (req, res) {
     var id = req.params.id;
@@ -122,4 +136,4 @@ function sendVerificationEMail (req, res, user) {
 exports.signup = onSignUp;
 exports.signin = onSignIn;
 exports.delete = onDelete;
-exports.find = onFind;
+//exports.find = onFind;

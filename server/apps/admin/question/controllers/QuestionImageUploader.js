@@ -63,7 +63,7 @@ function readImageFile(files, callback) {
 }
 
 function saveImageFile(filename, data, callback) {
-	var names = splitFilename(filename),
+	var names = splitFileExtension(filename),
 		timestamp = +(new Date()),
 		filename = names[0] + '_' + timestamp + '.' + names[1],
 		savePath = IMAGE_BASE_PATH + filename;
@@ -89,8 +89,12 @@ function createThumbFile(filename, data, callback) {
 	});
 }
 
-function splitFilename(filename) {
-	var separator = '-@#$%&-';
-	var str = filename.replace(/^([\w,\s-_.]+)\.([A-Za-z]+)$/, "$1" + separator + "$2");
-	return str.split(separator);
+function splitFileExtension(filename) {
+    var idx = filename.lastIndexOf('.');
+
+    if (idx === -1) {
+        return [filename, ""];
+    } else {
+        return [filename.substr(0, idx), filename.substr(idx)];
+    }
 }

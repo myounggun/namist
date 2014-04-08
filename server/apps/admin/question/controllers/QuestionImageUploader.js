@@ -11,7 +11,9 @@ var fs = require('fs'),
 	CLIENT_PATH = path.join(__dirname, '../../../../../client'),
 	IMAGE_BASE_PATH = CLIENT_PATH + "/images/",
 	THUMB_BASE_PATH = CLIENT_PATH + "/thumbs/",
-	THUM_SIZE = 70;
+	IMAGE_TYPES = /\.(gif|jpe?g|png)$/i,
+	THUM_SIZE = 70,
+	IS_NOT_IMAGE_FILE_FORMAT = 'is_not_image_file_format';
 
 /**
  * interface
@@ -49,6 +51,10 @@ function readImageFile(files, callback) {
 	var filename = files.image.name,
 		filePath = files.image.path;
 	
+	if (!IMAGE_TYPES.test(filename)) {
+		callback(IS_NOT_IMAGE_FILE_FORMAT);
+	}
+	
 	fs.readFile(filePath, function (err, data) {
 		if (err) callback(err);
 
@@ -57,9 +63,12 @@ function readImageFile(files, callback) {
 }
 
 function saveImageFile(filename, data, callback) {
-	var imageSavePath = IMAGE_BASE_PATH + filename;
+	var names = splitFilename(filename),
+		timestamp = +(new Date()),
+		filename = names[0] + '_' + timestamp + '.' + names[1],
+		savePath = IMAGE_BASE_PATH + filename;
 	
-	fs.writeFile(imageSavePath, data, function (err) {
+	fs.writeFile(savePath, data, function (err) {
 		if (err) callback(err);
 		
 		callback(null, filename, data);
@@ -78,4 +87,10 @@ function createThumbFile(filename, data, callback) {
 		
 		callback(null, filename);
 	});
+}
+
+function splitFilename(filename) {
+	var separator = '-@#$%&-';
+	var str = filename.replace(/^([\w,\s-_.]+)\.([A-Za-z]+)$/, "$1" + separator + "$2");
+	return str.split(separator);
 }

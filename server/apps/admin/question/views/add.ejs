@@ -9,7 +9,7 @@
 	<div style="text-align: center;">
 		<span style="font-size:40px;"><%= title %></span>
 	</div>
-	<form method="POST" action="/admin/question/create" enctype="application/x-www-form-urlencoded">
+	<form method="POST" action="/admin/question/create" enctype="multipart/form-data">
 	<table cellspacing="0">
 		<tr>
 			<th>Field Name</th>
@@ -37,7 +37,7 @@
 		<tr>
 			<td class="_fieldName">이미지 주소</td>
 			<td class="_fieldValue">
-				<input type="text" name="image" size="50" required/>
+				<input type='file' name='image'/>
 			</td>
 		</tr>
 	</table>

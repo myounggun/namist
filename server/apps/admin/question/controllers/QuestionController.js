@@ -1,4 +1,5 @@
 var Question = require('../Question');
+var Uploader = require('./QuestionImageUploader');
 var async = require('async');
 
 var LIST_PAGE_TITLE = "문제 목록";
@@ -8,7 +9,7 @@ var READ_PAGE_TITLE = "문제 정보";
 
 var hours = null;
 var page = 1;
-var pageSize = 2;
+var pageSize = 5;
 
 function list(req, res) {
 	page = req.query.page || 1;
@@ -77,12 +78,17 @@ function edit(req, res) {
 }
 
 function create(req, res) {
-	var document = getDocumentOfCollectionBy(req.body);
-
-	new Question(document).save(function (err, doc) {
-		if (err) throw err;
+	Uploader.uploadImage(req.files, function (filename, imageURL, thumbURL) {
+		req.body.image = imageURL;
+		req.body.thumb = thumbURL;
 		
-		res.redirect('/admin/question/' + doc.id);
+		var document = getDocumentOfCollectionBy(req.body);
+
+		new Question(document).save(function (err, doc) {
+			if (err) throw err;
+			
+			res.redirect('/admin/question/' + doc.id);
+		});
 	});
 }
 
@@ -176,6 +182,7 @@ function getDocumentOfCollectionBy(body) {
 	
 	var document = {
 			image : body.image,
+			thumb : body.thumb,
 			time  : {
 				start : body.startTime,
 				end   : body.endTime

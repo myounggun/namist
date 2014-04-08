@@ -21,6 +21,7 @@ var Question = new Schema({
 	id    : {type: Number, require: true, unique: true},
 	date  : {type: Date, default: Date.now},
 	image : {type: String, require: true, trim: true},
+	thumb : {type: String, require: true, trim: true},
 	time  : {
 		start : {type: String},
 		end   : {type: String}

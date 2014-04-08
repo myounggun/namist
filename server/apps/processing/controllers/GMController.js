@@ -3,10 +3,10 @@
  * brew install graphicsmagick
  * npm install graphicsmagick
  */
-var gm = require('gm')
-	, path = require('path')
-	, fs = require('fs')
-	, async = require('async');
+var gm = require('gm'),
+	path = require('path'),
+	fs = require('fs'),
+	async = require('async');
 
 var FONT_SIZE = 40,
 	CANVAS_MARGIN = 80;

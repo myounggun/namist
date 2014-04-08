@@ -14,21 +14,32 @@
     	<input type="submit" class="_btn" value="Regist" onclick="window.location='/admin/question/add'"/>
     </center>
 	<table cellspacing="0">
+		<tr>
+			<th>아이디</th>
+			<th>문제 이미지</th>
+			<th>확정 이미지</th>
+			<th>출제 시간 ~ 마감 시간</th>
+			<th>출제 날짜</th>
+		</tr>
 		<% 
-			var len = questions.length;
-			for (var i = 0; i < len; i++) {
+			for (var i = 0, l = questions.length; i < l; i++) {
 				var question = questions[i];
 		%>
 		<tr>
-			<td style="text-align: center">
+			<td style="width:10%;">
+				<%= question.id %>
+			</td>
+			<td style="width:10%;">
+				<a href="/admin/question/<%= question.id %>" target="_self"><img src="<%= question.thumb %>"/></a>
+			</td>
+			<td style="width:10%;">
 				
-				<br/>
-				<a href="/admin/question/<%= question.id %>" target="_self">
-					<img src="<%= question.image %>" width="250" height="250" />
-				<br/>
-				[id = <b><%= question.id %></b>] <%= question.displayDate %> <br/>
-				기간: <%= question.time.start %> ~ <%= question.time.end %>
-				</a>
+			</td>
+			<td style="width:15%;">
+				<%= question.time.start %> ~ <%= question.time.end %>
+			</td>
+			<td style="width:15%;">
+				 <%= question.displayDate %>
 			</td>
 		</tr>
 	   <% }; %>

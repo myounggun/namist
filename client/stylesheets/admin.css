@@ -45,7 +45,7 @@ table {
 	-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
 
-th, td {padding:10px 10px 10px; text-align:center; }
+th, td {padding:10px 10px 10px; text-align:center; vertical-align:middle}
 
 th {padding-top:10px; text-shadow: 1px 1px 1px #fff; background:#e8eaeb;}
 

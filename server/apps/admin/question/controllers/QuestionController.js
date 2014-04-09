@@ -1,4 +1,5 @@
 var Question = require('../Question');
+var Uploader = require('./QuestionImageUploader');
 var async = require('async');
 
 var LIST_PAGE_TITLE = "문제 목록";
@@ -8,7 +9,7 @@ var READ_PAGE_TITLE = "문제 정보";
 
 var hours = null;
 var page = 1;
-var pageSize = 2;
+var pageSize = 5;
 
 function list(req, res) {
 	page = req.query.page || 1;
@@ -77,12 +78,17 @@ function edit(req, res) {
 }
 
 function create(req, res) {
-	var document = getDocumentOfCollectionBy(req.body);
-
-	new Question(document).save(function (err, doc) {
-		if (err) throw err;
+	Uploader.uploadImage(req.files, function (err, imageURL, thumbURL) {
+		req.body.image = imageURL;
+		req.body.thumb = thumbURL;
 		
-		res.redirect('/admin/question/' + doc.id);
+		var document = getDocumentOfCollectionBy(req.body);
+
+		new Question(document).save(function (err, doc) {
+			if (err) throw err;
+			
+			res.redirect('/admin/question/' + doc.id);
+		});
 	});
 }
 
@@ -107,28 +113,44 @@ function read(req, res) {
 }
 
 function update(req, res) {
-	var document = getDocumentOfCollectionBy(req.body);
-	
-	Question.update({
-		id: req.body.id
-	}, 
-	{$set: document},
-	{safe: true}, 
-	function (err, result) {
-		if (err) throw err;
+	Uploader.uploadImage(req.files, function (err, imageURL, thumbURL) {
+		if (err) {
+			console.log(err);
+		} else {
+			req.body.image = imageURL;
+			req.body.thumb = thumbURL;
+		}
 		
-		res.redirect('/admin/question/' + req.body.id);
+		var document = getDocumentOfCollectionBy(req.body);
+		
+		Question.update({
+			id: req.body.id
+		}, 
+		{$set: document},
+		{safe: true}, 
+		function (err, result) {
+			if (err) throw err;
+			
+			res.redirect('/admin/question/' + req.body.id);
+		});
 	});
 }
 
 function del(req, res) {
-	Question.remove({
-		id: req.body.id
-	}, 
-	function(err, docs) {
+	var condition = {id: req.body.id};
+
+	Question.findOne(condition, function (err, doc) {
 		if (err) throw err;
 		
-		res.redirect('/admin/question/?page=' + page);
+		Uploader.removeImage([doc.image, doc.thumb], function (err) {
+			if (err) console.log(err);
+			
+			Question.remove(condition, function(err, removeCnt) {
+				if (err) throw err;
+				
+				res.redirect('/admin/question/?page=' + page);
+			});
+		});
 	});
 }
 
@@ -176,6 +198,7 @@ function getDocumentOfCollectionBy(body) {
 	
 	var document = {
 			image : body.image,
+			thumb : body.thumb,
 			time  : {
 				start : body.startTime,
 				end   : body.endTime

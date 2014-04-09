@@ -1,8 +1,12 @@
 /**
  * 문제 출제 시 짤방 이미지 업르드 처리
+ * 1) 업로
  * - 원본 이미지 저장
- * - 원본 리사이즈하여 섬네일 생성 후 저장
+ * - 원본 이미지를 리사이즈하여 섬네일 생성 후 저장
  * - 이미지와 섬네일 경로 반환
+ * 
+ * 2) 삭제
+ * - 원본/섬네일 이미지 삭제
  */
 var fs = require('fs'),
 	path = require('path'),
@@ -32,12 +36,12 @@ function uploadImage(files, done) {
          createThumbFile
      ],
      function (err, filename) {
-    	if (err) throw err;
+    	if (err) done(err);
     	
 		var imageURL = '/images/' + filename;
 		var thumbURL = '/thumbs/' + filename;
     	
-    	done(filename, imageURL, thumbURL);
+    	done(null, imageURL, thumbURL);
      });
 }
 
@@ -59,11 +63,14 @@ function removeImage(urls, done) {
         				
         				callback(null);
         			});
+        		} else {
+        			callback(IMAGE_NOT_FOUND);
         		}
         	});
         },
-        function (err) {
-        	if (err) throw err;
+        function (err, urls) {
+        	if (err) done(err);
+        	
             done();
         }
     );

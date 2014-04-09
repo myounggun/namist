@@ -78,7 +78,7 @@ function edit(req, res) {
 }
 
 function create(req, res) {
-	Uploader.uploadImage(req.files, function (filename, imageURL, thumbURL) {
+	Uploader.uploadImage(req.files, function (err, imageURL, thumbURL) {
 		req.body.image = imageURL;
 		req.body.thumb = thumbURL;
 		
@@ -113,17 +113,26 @@ function read(req, res) {
 }
 
 function update(req, res) {
-	var document = getDocumentOfCollectionBy(req.body);
-	
-	Question.update({
-		id: req.body.id
-	}, 
-	{$set: document},
-	{safe: true}, 
-	function (err, result) {
-		if (err) throw err;
+	Uploader.uploadImage(req.files, function (err, imageURL, thumbURL) {
+		if (err) {
+			console.log(err);
+		} else {
+			req.body.image = imageURL;
+			req.body.thumb = thumbURL;
+		}
 		
-		res.redirect('/admin/question/' + req.body.id);
+		var document = getDocumentOfCollectionBy(req.body);
+		
+		Question.update({
+			id: req.body.id
+		}, 
+		{$set: document},
+		{safe: true}, 
+		function (err, result) {
+			if (err) throw err;
+			
+			res.redirect('/admin/question/' + req.body.id);
+		});
 	});
 }
 
@@ -133,7 +142,9 @@ function del(req, res) {
 	Question.findOne(condition, function (err, doc) {
 		if (err) throw err;
 		
-		Uploader.removeImage([doc.image, doc.thumb], function (result) {
+		Uploader.removeImage([doc.image, doc.thumb], function (err) {
+			if (err) console.log(err);
+			
 			Question.remove(condition, function(err, removeCnt) {
 				if (err) throw err;
 				

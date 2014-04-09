@@ -10,8 +10,12 @@ body {
 /*---------------[MAIN LAYOUT INFO]---------------*/
 /*------------------------------------------------*/
 
+#recover-password-container {
+    width: 552px;
+}
+
 #profile-container {
-    width: 100%
+    width: 100%;
 }
 
 #profile-container h1 {
@@ -22,6 +26,10 @@ body {
     margin-top: 5px;
     margin-left: 5px;
     float: right;
+}
+
+#profile-container .panel-default .glyphicon {
+    margin-right: 5px;
 }
 
 #sign-in-container .content-body span {
@@ -62,7 +70,7 @@ body {
     margin-top: 20px;
 }
 
-.glyphicon {
+.button-group .glyphicon {
     margin-right: 5px;
 }
 

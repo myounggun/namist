@@ -1,4 +1,4 @@
-var AccountModel = require('../../account/Account'),
+var AccountModel = require('../../account/model/Account'),
 	TokenModel = require('../../verification/VerificationTokenModel');
 
 module.exports = {

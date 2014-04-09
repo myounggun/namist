@@ -57,7 +57,7 @@ app.use(express.static(path.join(__dirname, '../client')));
 
 routes(app);
 
-var Account = require('./apps/account/Account');
+var Account = require('./apps/account/model/Account');
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());

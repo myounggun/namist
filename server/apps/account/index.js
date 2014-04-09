@@ -1,7 +1,7 @@
 var express = require('express'),
     app = module.exports = express(),
-    passport = require('passport'),
-    controller = require('./controllers/AccountController');
+    accountController = require('./controllers/AccountController'),
+    recoveryController = require('./controllers/RecoveryPasswordController');
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -10,19 +10,21 @@ app.set('view engine', 'ejs');
 app.get('/account/signin', function (req, res) {
     res.render('formSignIn', {message: null});
 });
-app.post('/account/signin', controller.signin);
+app.post('/account/signin', accountController.signin);
 
 // Sign Up
 app.get('/account/signup', function (req, res) {
     res.render('formSignUp', {message: null});
 });
-app.post('/account/signup', controller.signup);
+app.post('/account/signup', accountController.signup);
 
-// Reset Password
-//app.get('/account/resetPassword', function (req, res) {
-//    res.render('formResetPassword');
-//});
-//app.post('/account/resetPassword', controller.find);
+// Recover Password
+app.get('/account/recover', function (req, res) {
+    res.render('formRecoverPassword', {message: null});
+});
+app.post('/account/recover', accountController.recover);
+app.put('/account/reset/:id', accountController.reset);
+app.get('/account/verify/:token', recoveryController.verify);
 
 // Logout
 app.get('/account/logout', function (req, res) {
@@ -40,8 +42,7 @@ app.get('/account/profile', function (req, res) {
         res.redirect('/');
     }
 });
-
-app.put('/account/profile/edit', controller.profileEdit);
+app.put('/account/profile/edit', accountController.profileEdit);
 
 // Delete Account
-app.delete('/account/delete/:id', controller.delete);
+app.delete('/account/delete/:id', accountController.delete);

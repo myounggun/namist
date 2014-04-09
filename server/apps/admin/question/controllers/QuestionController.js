@@ -128,13 +128,18 @@ function update(req, res) {
 }
 
 function del(req, res) {
-	Question.remove({
-		id: req.body.id
-	}, 
-	function(err, docs) {
+	var condition = {id: req.body.id};
+
+	Question.findOne(condition, function (err, doc) {
 		if (err) throw err;
 		
-		res.redirect('/admin/question/?page=' + page);
+		Uploader.removeImage([doc.image, doc.thumb], function (result) {
+			Question.remove(condition, function(err, removeCnt) {
+				if (err) throw err;
+				
+				res.redirect('/admin/question/?page=' + page);
+			});
+		});
 	});
 }
 

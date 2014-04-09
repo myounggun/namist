@@ -13,13 +13,14 @@ var fs = require('fs'),
 	THUMB_BASE_PATH = CLIENT_PATH + "/thumbs/",
 	IMAGE_TYPES = /\.(gif|jpe?g|png)$/i,
 	THUM_SIZE = 70,
-	IS_NOT_IMAGE_FILE_FORMAT = 'is_not_image_file_format';
+	IS_NOT_IMAGE_FILE_FORMAT = 'is_not_image_file_format',
+	IMAGE_NOT_FOUND = 'image_not_found';
 
 /**
  * interface
  */
 exports.uploadImage = uploadImage;
-exports.deleteImage = deleteImage;
+exports.removeImage = removeImage;
 
 /**
  * handlers
@@ -40,9 +41,34 @@ function uploadImage(files, done) {
      });
 }
 
-function deleteImage(filename, done) {
-	console.log('del');
+function removeImage(urls, done) {
+	var index = 0;
+	
+    async.whilst(
+        function () { return index < urls.length; },
+        function (callback) {
+        	var url = CLIENT_PATH + urls[index++];
+        	if (!url) {
+        		callback(IMAGE_NOT_FOUND);
+        	}
+        	
+        	fs.exists(url, function (exists) {
+        		if (exists) {
+        			fs.unlink(url, function (err) {
+        				if (err) callback(err);
+        				
+        				callback(null);
+        			});
+        		}
+        	});
+        },
+        function (err) {
+        	if (err) throw err;
+            done();
+        }
+    );
 }
+
 
 /**
  * methods
@@ -65,7 +91,7 @@ function readImageFile(files, callback) {
 function saveImageFile(filename, data, callback) {
 	var names = splitFileExtension(filename),
 		timestamp = +(new Date()),
-		filename = names[0] + '_' + timestamp + '.' + names[1],
+		filename = names[0] + '_' + timestamp + names[1],
 		savePath = IMAGE_BASE_PATH + filename;
 	
 	fs.writeFile(savePath, data, function (err) {

@@ -14,9 +14,7 @@
         </div>
         <hr>
         <div class="content-body">
-            <% if (message && message.length > 0) { %>
-            <div class="alert alert-warning"><%=message%></div>
-            <% } %>
+            <% include ../../alert/Flash-Alerts %>
             <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
                 <input type="text" class="form-control required" placeholder="Username" name="username" maxlength="255" required="required"></input>

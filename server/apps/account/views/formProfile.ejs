@@ -27,6 +27,7 @@
                     <span class="glyphicon glyphicon-remove"></span><span class="info">Not Authorized</span>
                     <% } %>
                 </div>
+                <% include ../../alert/Flash-Alerts %>
                 <div class="button-group">
                     <button type="button" id="btn-unlink" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-remove-sign"></span>Unlink</button>
                     <% if (!user.authentication) { %>

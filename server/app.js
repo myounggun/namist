@@ -10,6 +10,7 @@ var express		  = require('express')
   , mongoose	  = require('mongoose')
   , autoIncrement = require('mongoose-auto-increment')
   , engine = require('ejs-locals')
+  , flash = require('express-flash')
   , globalLocals = require('./modules/global-locals');
 
 var passport		= require('passport');
@@ -49,7 +50,8 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('namist'));
-app.use(express.session());
+app.use(express.session({cookie: {maxAge:60000}}));
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(app.router);

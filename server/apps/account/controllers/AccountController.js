@@ -1,32 +1,44 @@
-var passport = require('passport'),
+var async = require('async'),
+    passport = require('passport'),
     Account = require('../model/Account'),
     CertificationTokenizer = require('../../verification/Tokenizer.js'),
-    PasswordTokenizer = require('../util/PasswordTokenizer.js');
+    PasswordTokenizer = require('../util/PasswordTokenizer.js'),
+    ErrorHandling = require('../util/MongoDBErrorHandler.js');
 
 function onSignIn (req, res) {
-    passport.authenticate('local', function (err, user) {
+    async.waterfall([
+        function (cb) {
+            passport.authenticate('local', function (err, user) {
+                if (err) {
+                    cb(err);
+                }
+
+                if (!user) {
+                    req.flash('warning', "Sorry, we didn't recognize your sign-in details. Please check your user name and password, then try again");
+                    return res.render('formSignIn');
+                }
+
+                cb(null, user);
+            })(req, res);
+        },
+        function (user, cb) {
+            req.logIn(user, function (err) {
+                if (err) {
+                    cb(err);
+                }
+
+                if (user.authentication) {
+                    res.redirect('/');
+                } else {
+                    res.redirect('/account/profile');
+                }
+            });
+        }
+    ], function (err, result) {
         if (err) {
             throw err;
         }
-
-        if (!user) {
-            return res.render('formSignIn', {
-                message: "Sorry, we didn't recognize your sign-in details. Please check your user name and password, then try again."
-            });
-        }
-
-        req.logIn(user, function (err) {
-            if (err) {
-                throw err;
-            }
-
-            if (user.authentication) {
-                res.redirect('/');
-            } else {
-                res.redirect('/account/profile');
-            }
-        });
-    })(req, res);
+    });
 }
 
 function onSignUp (req, res) {
@@ -34,30 +46,37 @@ function onSignUp (req, res) {
         email = req.body.email,
         password = req.body.password;
 
-    var account = new Account({
-        username: username,
-        email: email
-    });
+    async.waterfall([
+        function (cb) {
+            Account.register(new Account({
+                username: username,
+                email: email
+            }), password, cb);
+        },
+        function (user, cb) {
+            var authByToken = CertificationTokenizer(req, res);
 
-    Account.register(account, password, function (err, user) {
-        if (err) {
-            var message = '';
+            authByToken.createToken(user, function (err, token) {
+                if (err) {
+                    cb(err);
+                } else {
+                    authByToken.sendVerificationEmail(user, token);
 
-            switch (err.name) {
-                case 'BadRequestError':
-                    message = err.message;
-                    break;
-                case 'MongoError':
-                    if (err.code == 11000) {
-                        message = 'User already exists with email';
-                    }
-                    break;
-            }
-
-            return res.render('formSignUp', {message: message});
+                    passport.authenticate('local')(req, res, function () {
+                        res.send('Send verification email by token \''+ token +'\'. Complete!');
+                    });
+                }
+            });
         }
+    ], function (err, result) {
+        var msg = ErrorHandling(err);
 
-        sendVerificationEMail(req, res, user);
+        if (msg) {
+            req.flash('warning', msg);
+            res.render('formSignUp');
+        } else {
+            throw err;
+        }
     });
 }
 
@@ -65,79 +84,72 @@ function onRecover (req, res) {
     var username = req.body.username,
         email = req.body.email;
 
-    Account.findOne({username: username}, function (err, user) {
+    async.waterfall([
+        function (cb) {
+            Account.findOne({username: username}, cb);
+        },
+        function (user, cb) {
+            if (!user || (email !== user.email)) {
+                req.flash('warning', "Sorry, we didn't recognize your recovery details. Please check your user name and email, then try again");
+                return res.render('formRecoverPassword');
+            }
+
+            cb(null, user);
+        },
+        function (user, cb) {
+            var passwordToken = PasswordTokenizer(req, res);
+
+            passwordToken.createToken(user, function (err, token) {
+                if (err) {
+                    cb(err);
+                }
+
+                passwordToken.sendRecoveryEmail(user, token);
+                res.redirect('/');
+            });
+        }
+    ], function (err, result) {
         if (err) {
             throw err;
         }
-
-        if (!user || (email !== user.email)) {
-            return res.render('formRecoverPassword', {
-                message: "Sorry, we didn't recognize your sign-in details. Please check your user name and email, then try again."
-            });
-        }
-
-        var passwordToken = PasswordTokenizer(req, res);
-
-        passwordToken.createToken(user, function (err, token) {
-            if (err) {
-                throw err;
-            }
-
-            passwordToken.sendRecoveryEmail(user, token);
-
-            res.redirect('/');
-        });
     });
 }
 
 function onReset (req, res) {
-    var userId = req.params.id,
+    var id = req.params.id,
         password = req.body.password,
         confirm = req.body.confirm;
 
-    if (!password || !confirm) {
-        res.render('formNewPassword', {message: 'Required your password.'});
-    }
-
-    if (password !== confirm) {
-        res.render('formNewPassword', {message: 'Passwords do not match.'});
-    }
-
-    Account.findOne({_id: userId}, function (err, user) {
-        if (err) {
-            throw err;
-        }
-
-        if (!user) {
-            return res.render('formNewPassword', {
-                message: "Bad Access"
-            });
-        }
-
-        user.setPassword(confirm, function (err) {
-            if (err) {
-                throw err;
+    async.waterfall([
+        function (cb) {
+            Account.findOne({_id: id}, cb);
+        },
+        function (user, cb) {
+            if (!user) {
+                req.flash('danger', 'Access to Namist has been denied')
+                return res.render('formNewPassword');
             }
 
+            user.setPassword(confirm, cb);
+        },
+        function (user, cb) {
             user.save(function (err) {
                 if (err) {
-                    throw err;
+                    cb(err);
                 }
 
                 res.redirect('/account/signin');
             });
-        });
+        }
+    ], function (err, result) {
+        if (err) {
+            throw err;
+        }
     });
 }
 
 function onDelete (req, res) {
-    var id = req.params.id;
-
-    console.log(id);
-
-    Account.remove({
-        _id: id
-    }, function (err, resCode) {
+    Account.remove({_id: req.params.id}, function (err, resCode) {
         if (err) {
             throw err;
         }
@@ -146,24 +158,9 @@ function onDelete (req, res) {
             req.logout();
             res.redirect('/');
         } else {
-            console.log('삭제를 실패했습니다.');
+            req.flash('warning', 'Failed to unlink account');
+            res.render('formProfile');
         }
-    })
-}
-
-function sendVerificationEMail (req, res, user) {
-    var authByToken = CertificationTokenizer(req, res);
-
-    authByToken.createToken(user, function (err, token) {
-        if (err) {
-            throw err;
-        }
-
-        authByToken.sendVerificationEmail(user, token);
-
-        passport.authenticate('local')(req, res, function () {
-            res.send('Send verification email by token \''+ token +'\'. Complete!');
-        });
     });
 }
 

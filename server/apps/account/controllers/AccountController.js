@@ -14,8 +14,7 @@ function onSignIn (req, res) {
                 }
 
                 if (!user) {
-                    req.flash('warning', "Sorry, we didn't recognize your sign-in details. Please check your user name and password, then try again");
-                    return res.render('formSignIn');
+                    return cb(CustomError("Sorry, we didn't recognize your sign-in details. Please check your user name and password, then try again"));
                 }
 
                 cb(null, user);
@@ -27,16 +26,18 @@ function onSignIn (req, res) {
                     cb(err);
                 }
 
-                if (user.authentication) {
-                    res.redirect('/');
-                } else {
-                    res.redirect('/account/profile');
-                }
+                cb(null, user);
             });
         }
     ], function (err, result) {
         if (err) {
-            throw err;
+            return throwError(req, res, err, 'formSignIn');
+        }
+
+        if (result.authentication) {
+            res.redirect('/');
+        } else {
+            res.redirect('/account/profile');
         }
     });
 }
@@ -59,13 +60,16 @@ function onSignUp (req, res) {
             authByToken.createToken(user, function (err, token) {
                 if (err) {
                     cb(err);
-                } else {
-                    authByToken.sendVerificationEmail(user, token);
-
-                    passport.authenticate('local')(req, res, function () {
-                        res.send('Send verification email by token \''+ token +'\'. Complete!');
-                    });
                 }
+
+                cb(null, user, authByToken, token);
+            });
+        },
+        function (user, authByToken, token, cb) {
+            authByToken.sendVerificationEmail(user, token);
+            passport.authenticate('local')(req, res, function () {
+                res.send('Send verification email by token \''+ token +'\'. Complete!');
+                cb(null, user);
             });
         }
     ], function (err, result) {
@@ -86,15 +90,17 @@ function onRecover (req, res) {
 
     async.waterfall([
         function (cb) {
-            Account.findOne({username: username}, cb);
-        },
-        function (user, cb) {
-            if (!user || (email !== user.email)) {
-                req.flash('warning', "Sorry, we didn't recognize your recovery details. Please check your user name and email, then try again");
-                return res.render('formRecoverPassword');
-            }
+            Account.findOne({username: username}, function (err, user) {
+                if (err) {
+                    throw err;
+                }
 
-            cb(null, user);
+                if (!user || (email !== user.email)) {
+                    return cb(CustomError("Sorry, we didn't recognize your recovery details. Please check your user name and email, then try again"));
+                }
+
+                cb(null, user);
+            });
         },
         function (user, cb) {
             var passwordToken = PasswordTokenizer(req, res);
@@ -104,14 +110,19 @@ function onRecover (req, res) {
                     cb(err);
                 }
 
-                passwordToken.sendRecoveryEmail(user, token);
-                res.redirect('/');
+                cb(null, user, passwordToken, token);
             });
+        },
+        function (user, passwordToken, token, cb) {
+            passwordToken.sendRecoveryEmail(user, token);
+            cb(null);
         }
     ], function (err, result) {
         if (err) {
-            throw err;
+            return throwError(req, res, err, 'formRecoverPassword');
         }
+
+        res.redirect('/');
     });
 }
 
@@ -122,14 +133,19 @@ function onReset (req, res) {
 
     async.waterfall([
         function (cb) {
-            Account.findOne({_id: id}, cb);
+            Account.findOne({_id: id}, function (err, user) {
+                if (err) {
+                    cb(err);
+                }
+
+                if (!user) {
+                    return cb(CustomError('Access to Namist has been denied'));
+                }
+
+                cb(null, user);
+            });
         },
         function (user, cb) {
-            if (!user) {
-                req.flash('danger', 'Access to Namist has been denied')
-                return res.render('formNewPassword');
-            }
-
             user.setPassword(confirm, cb);
         },
         function (user, cb) {
@@ -138,13 +154,15 @@ function onReset (req, res) {
                     cb(err);
                 }
 
-                res.redirect('/account/signin');
+                cb(null);
             });
         }
     ], function (err, result) {
         if (err) {
-            throw err;
+            return throwError(req, res, err, 'formNewPassword');
         }
+
+        res.redirect('/account/signin');
     });
 }
 
@@ -223,6 +241,22 @@ function onProfileEdit(req, res) {
             });
         });
     }
+}
+
+function CustomError (message) {
+    var err = new Error(message);
+    err.name = 'CustomError';
+
+    return err;
+}
+
+function throwError (req, res, err, renderTarget) {
+    if (err.name === 'CustomError') {
+        req.flash('warning', err.message);
+        return res.render(renderTarget);
+    }
+
+    throw err;
 }
 
 exports.signup = onSignUp;

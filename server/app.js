@@ -9,9 +9,10 @@ var express		  = require('express')
   , path		  = require('path')
   , mongoose	  = require('mongoose')
   , autoIncrement = require('mongoose-auto-increment')
-  , engine = require('ejs-locals')
-  , flash = require('express-flash')
-  , globalLocals = require('./modules/global-locals');
+  , engine        = require('ejs-locals')
+  , flash         = require('express-flash')
+  , globalLocals  = require('./modules/global-locals')
+  , I18N          = require('i18n');
 
 var passport		= require('passport');
 var LocalStrategy	= require('passport-local').Strategy;
@@ -32,6 +33,12 @@ db.on('open', function () {
 
 var app = express();
 
+I18N.configure({
+    locales: ['ko', 'en'],
+    directory: path.join(__dirname, '/apps/locales'),
+    defaultLocale: 'en',
+    cookie: 'namist'
+});
 
 // all environments
 
@@ -54,6 +61,7 @@ app.use(express.session({cookie: {maxAge:60000}}));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(I18N.init);
 app.use(app.router);
 app.use(express.static(path.join(__dirname, '../client')));
 

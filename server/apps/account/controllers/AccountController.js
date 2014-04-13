@@ -1,5 +1,6 @@
 var async = require('async'),
     passport = require('passport'),
+    I18N = require('i18n'),
     Account = require('../model/Account'),
     CertificationTokenizer = require('../../verification/Tokenizer.js'),
     PasswordTokenizer = require('../util/PasswordTokenizer.js'),
@@ -14,7 +15,7 @@ function onSignIn (req, res) {
                 }
 
                 if (!user) {
-                    return cb(CustomError("Sorry, we didn't recognize your sign-in details. Please check your user name and password, then try again"));
+                    return cb(CustomError('FAILURE_NO_USER'));
                 }
 
                 cb(null, user);
@@ -73,13 +74,17 @@ function onSignUp (req, res) {
             });
         }
     ], function (err, result) {
-        var msg = ErrorHandling(err);
+        if (err) {
+            var msg = ErrorHandling(err);
 
-        if (msg) {
-            req.flash('warning', msg);
-            res.render('formSignUp');
+            if (msg) {
+                req.flash('warning', msg);
+                res.render('formSignUp');
+            } else {
+                throw err;
+            }
         } else {
-            throw err;
+            res.redirect('/');
         }
     });
 }
@@ -96,7 +101,7 @@ function onRecover (req, res) {
                 }
 
                 if (!user || (email !== user.email)) {
-                    return cb(CustomError("Sorry, we didn't recognize your recovery details. Please check your user name and email, then try again"));
+                    return cb(CustomError('FAILURE_NO_USER'));
                 }
 
                 cb(null, user);
@@ -139,7 +144,7 @@ function onReset (req, res) {
                 }
 
                 if (!user) {
-                    return cb(CustomError('Access to Namist has been denied'));
+                    return cb(CustomError('FAILURE_ACCESS_DENIED'));
                 }
 
                 cb(null, user);
@@ -176,7 +181,7 @@ function onDelete (req, res) {
             req.logout();
             res.redirect('/');
         } else {
-            req.flash('warning', 'Failed to unlink account');
+            req.flash('warning', res.__('FAILURE_UNLINK_ACCOUNT'));
             res.render('formProfile');
         }
     });
@@ -252,7 +257,8 @@ function CustomError (message) {
 
 function throwError (req, res, err, renderTarget) {
     if (err.name === 'CustomError') {
-        req.flash('warning', err.message);
+//        req.flash('warning', err.message);
+        req.flash('warning', res.__(err.message));
         return res.render(renderTarget);
     }
 

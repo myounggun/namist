@@ -64,13 +64,25 @@ function read(req, res) {
  * /api/question/submit?id=12&title=재미없는짤방
  */
 function submit(req, res) {
-    Question.find({id: req.query.id}, function(err, docs) {
-        var titleLists = docs[0]["titles"];
-        titleLists.push({ title : decodeURIComponent(req.query.title) });
-        Question.update({ id : req.query.id }, { "titles" : titleLists }, function(err, newVal, raw) {
-//            console.log(newVal, raw)
-        });
-    });
+//    Question.find({id: req.query.id}, function(err, docs) {
+//        console.log(docs);
+//        var titleLists = docs[0]["titles"];
+//        titleLists.push({ title : decodeURIComponent(req.query.title) });
+//        Question.update({ id : req.query.id }, { "titles" : titleLists });
+//    });
+
+    Question.update({ id : req.query.id },
+        { $push:
+            { "titles" :
+                { $each:
+                    [ {
+                        "title" : decodeURIComponent(req.query.title),
+                        "users" : []
+                    } ]
+                }
+            }
+        }, function(){ console.log(arguments); }
+    );
 }
 
 /**

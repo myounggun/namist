@@ -37,13 +37,11 @@ function uploadImage(files, done) {
      ],
      function (err, filename) {
     	if (err) done(err);
-    	else {
-            var imageURL = '/images/' + filename;
-            var thumbURL = '/thumbs/' + filename;
 
-            done(null, imageURL, thumbURL);
-        }
+		var imageURL = '/images/' + filename;
+		var thumbURL = '/thumbs/' + filename;
 
+    	done(null, imageURL, thumbURL);
      });
 }
 
@@ -56,24 +54,28 @@ function removeImage(urls, done) {
         	var url = CLIENT_PATH + urls[index++];
         	if (!url) {
         		callback(IMAGE_NOT_FOUND);
-        	} else {
-                fs.exists(url, function (exists) {
-                    if (exists) {
-                        fs.unlink(url, function (err) {
-                            if (err) callback(err);
+        	}
 
-                            callback(null);
-                        });
-                    } else {
-                        callback(IMAGE_NOT_FOUND);
-                    }
-                });
-            }
+        	fs.exists(url, function (exists) {
+        		if (exists) {
+        			fs.unlink(url, function (err) {
+        				if (err) callback(err);
+
+        				callback(null);
+        			});
+        		} else {
+        			callback(IMAGE_NOT_FOUND);
+        		}
+        	});
         },
         function (err, urls) {
-        	if (err) done(err);
+        	if (err) {
+                done(err);
+            } else {
+                done();
+            }
         	
-            done();
+
         }
     );
 }
@@ -92,11 +94,8 @@ function readImageFile(files, callback) {
 	
 	fs.readFile(filePath, function (err, data) {
 		if (err) callback(err);
-        else {
-            callback(null, filename, data);
-        }
 
-
+		callback(null, filename, data);
 	});
 }
 
@@ -108,10 +107,8 @@ function saveImageFile(filename, data, callback) {
 	
 	fs.writeFile(savePath, data, function (err) {
 		if (err) callback(err);
-		else {
-            callback(null, filename, data);
-        }
 
+		callback(null, filename, data);
 	});
 }
 
@@ -124,10 +121,8 @@ function createThumbFile(filename, data, callback) {
 	.noProfile()
 	.write(dstPath, function (err) {
 		if (err) callback(err);
-		else {
-            callback(null, filename);
-        }
 
+		callback(null, filename);
 	});
 }
 

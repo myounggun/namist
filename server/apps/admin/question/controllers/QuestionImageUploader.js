@@ -36,11 +36,15 @@ function uploadImage(files, done) {
          createThumbFile
      ],
      function (err, filename) {
-    	if (err) done(err);
-    	
+    	if (err) {
+            console.log(err);
+            done(err);
+            return
+        }
+
 		var imageURL = '/images/' + filename;
 		var thumbURL = '/thumbs/' + filename;
-    	
+
     	done(null, imageURL, thumbURL);
      });
 }
@@ -55,12 +59,12 @@ function removeImage(urls, done) {
         	if (!url) {
         		callback(IMAGE_NOT_FOUND);
         	}
-        	
+
         	fs.exists(url, function (exists) {
         		if (exists) {
         			fs.unlink(url, function (err) {
         				if (err) callback(err);
-        				
+
         				callback(null);
         			});
         		} else {
@@ -69,9 +73,14 @@ function removeImage(urls, done) {
         	});
         },
         function (err, urls) {
-        	if (err) done(err);
+        	if (err) {
+                console.log(err);
+                done(err);
+            } else {
+                done();
+            }
         	
-            done();
+
         }
     );
 }
@@ -89,9 +98,14 @@ function readImageFile(files, callback) {
 	}
 	
 	fs.readFile(filePath, function (err, data) {
-		if (err) callback(err);
+		if (err) {
+            console.log(err);
+            callback(err);
+        } else {
+            callback(null, filename, data);
+        }
 
-		callback(null, filename, data);
+
 	});
 }
 
@@ -102,23 +116,30 @@ function saveImageFile(filename, data, callback) {
 		savePath = IMAGE_BASE_PATH + filename;
 	
 	fs.writeFile(savePath, data, function (err) {
-		if (err) callback(err);
-		
-		callback(null, filename, data);
+		if (err) {
+            callback(err);
+        } else {
+            callback(null, filename, data);
+        }
+
+
 	});
 }
 
 function createThumbFile(filename, data, callback) {
 	var srcPath = IMAGE_BASE_PATH + filename;
 	var dstPath = THUMB_BASE_PATH + filename;
-	
-	gm(srcPath)
+	var imagic = gm.subClass({imageMagick: true});
+
+    imagic(srcPath)
 	.resize(THUM_SIZE, THUM_SIZE)
 	.noProfile()
 	.write(dstPath, function (err) {
-		if (err) callback(err);
-		
-		callback(null, filename);
+		if (err) {
+            callback(err);
+        } else {
+            callback(null, filename);
+        }
 	});
 }
 

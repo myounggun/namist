@@ -3,7 +3,7 @@
  * brew install graphicsmagick
  * npm install graphicsmagick
  */
-var gm = require('gm'),
+var gm = require('gm').subClass({imageMagick: true}),
 	path = require('path'),
 	fs = require('fs'),
 	async = require('async');
@@ -34,7 +34,7 @@ function test(req, res) {
    			.gravity('Center') 
    			.extent(size.width + CANVAS_MARGIN / 2, size.height + CANVAS_MARGIN / 2)
    			.gravity('North') 
-   			.extent(0, size.height + CANVAS_MARGIN)
+   			.extent(size.width + CANVAS_MARGIN / 2, size.height + CANVAS_MARGIN)
    			.border(3, 3)
    			//.stroke("#333333", 2)
    			//.strokeWidth(2)

@@ -7,13 +7,15 @@ module.exports = {
 
         verifyUser(token, function (err, user) {
             if (err) {
+                if (err.name === 'CustomError') {
+                    res.send(err.message);
+                    res.end();
+                }
+
                 throw err;
             }
 
-            res.render('formNewPassword', {
-                id: user._id,
-                message: null
-            });
+            res.render('formNewPassword', {id: user._id});
         });
     }
 };
@@ -25,7 +27,10 @@ function verifyUser (token, done) {
         }
 
         if (!refToken) {
-            return done(new Error('잘못된 토큰입니다.'), null);
+            var err = new Error('Access to Namist has been denied');
+            err.name = 'CustomError';
+
+            return done(err, null);
         }
 
         Account.findOne({_id: refToken._userId}, function (err, user) {

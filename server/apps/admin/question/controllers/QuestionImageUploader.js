@@ -93,9 +93,13 @@ function readImageFile(files, callback) {
 	}
 	
 	fs.readFile(filePath, function (err, data) {
-		if (err) callback(err);
+		if (err) {
+            callback(err);
+        } else {
+            callback(null, filename, data);
+        }
 
-		callback(null, filename, data);
+
 	});
 }
 
@@ -106,9 +110,13 @@ function saveImageFile(filename, data, callback) {
 		savePath = IMAGE_BASE_PATH + filename;
 	
 	fs.writeFile(savePath, data, function (err) {
-		if (err) callback(err);
+		if (err) {
+            callback(err);
+        } else {
+            callback(null, filename, data);
+        }
 
-		callback(null, filename, data);
+
 	});
 }
 
@@ -120,9 +128,11 @@ function createThumbFile(filename, data, callback) {
 	.resize(THUM_SIZE, THUM_SIZE)
 	.noProfile()
 	.write(dstPath, function (err) {
-		if (err) callback(err);
-
-		callback(null, filename);
+		if (err) {
+            callback(err);
+        } else {
+            callback(null, filename);
+        }
 	});
 }
 

@@ -19,6 +19,12 @@ var accountSchema = new Schema({
         require: true,
         trim: true,
         unique: true
+    },
+    facebook: {
+    	id : String,
+    	token : String,
+    	email : String,
+    	name : String
     }
 });
 

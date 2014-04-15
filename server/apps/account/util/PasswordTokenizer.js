@@ -9,7 +9,6 @@ module.exports = function (req, res) {
 
             passwordToken.createPasswordToken(function (err, token) {
                 if (err) {
-                    console.log("Couldn't create password token", err);
                     return done(err);
                 }
 
@@ -20,18 +19,18 @@ module.exports = function (req, res) {
         sendRecoveryEmail: function (user, token) {
             var verifyUrl = req.protocol + "://" + req.get('host') + "/account/verify/" + token,
                 mailBody = [
-                    'To reset your password to sign in to Namist.<br />Please click the link below to complete your new password request:<br /><br />',
-                        '<a href="'+ verifyUrl +'" target="_blank">Reset Password</a><br /><br />',
-                    'Or copy and paste this link into your browser:<br />',
-                        '<a href="'+ verifyUrl +'" target="_blank">'+ verifyUrl +'</a><br /><br />',
-                    'If something isn\'t working, please don\'t contact us.<br /><br />',
-                    'Thanks,<br />The Namist Team<br /><br />'
+                    res.__('MAIL_BODY_PASSWORD_1') + '<br /><br />',
+                    '<a href="'+ verifyUrl +'" target="_blank">' + res.__('MAIL_BODY_PASSWORD_BUTTON') + '</a><br /><br />',
+                    res.__('MAIL_BODY_PASSWORD_2') + '<br />',
+                    '<a href="' + verifyUrl + '" target="_blank">' + verifyUrl + '</a><br /><br />',
+                    res.__('MAIL_BODY_CALL_ME') + '<br /><br />',
+                    res.__('MAIL_BODY_THX') + '<br />' + res.__('MAIL_BODY_TEAM') + '<br /><br />'
                 ].join('');
 
             mail({
                 from: 'namist <noreply@namist.com>',
                 to: user.username +' <'+ user.email +'>',
-                subject: "[Namist] Password Reset Confirmation",
+                subject: res.__('MAIL_SUBJECT_PASSWORD'),
                 html: mailBody
             });
         }

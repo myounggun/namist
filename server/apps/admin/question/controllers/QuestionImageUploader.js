@@ -36,7 +36,11 @@ function uploadImage(files, done) {
          createThumbFile
      ],
      function (err, filename) {
-    	if (err) done(err);
+    	if (err) {
+            console.log(err);
+            done(err);
+            return
+        }
 
 		var imageURL = '/images/' + filename;
 		var thumbURL = '/thumbs/' + filename;
@@ -70,6 +74,7 @@ function removeImage(urls, done) {
         },
         function (err, urls) {
         	if (err) {
+                console.log(err);
                 done(err);
             } else {
                 done();
@@ -94,6 +99,7 @@ function readImageFile(files, callback) {
 	
 	fs.readFile(filePath, function (err, data) {
 		if (err) {
+            console.log(err);
             callback(err);
         } else {
             callback(null, filename, data);
@@ -123,8 +129,9 @@ function saveImageFile(filename, data, callback) {
 function createThumbFile(filename, data, callback) {
 	var srcPath = IMAGE_BASE_PATH + filename;
 	var dstPath = THUMB_BASE_PATH + filename;
-	
-	gm(srcPath)
+	var imagic = gm.subClass({imageMagick: true});
+
+    imagic(srcPath)
 	.resize(THUM_SIZE, THUM_SIZE)
 	.noProfile()
 	.write(dstPath, function (err) {

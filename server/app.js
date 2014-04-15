@@ -56,6 +56,7 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
+app.use(express.static(path.join(__dirname, '../client')));
 app.use(express.cookieParser('namist'));
 app.use(express.session({cookie: {maxAge:60000}}));
 app.use(flash());
@@ -63,7 +64,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(I18N.init);
 app.use(app.router);
-app.use(express.static(path.join(__dirname, '../client')));
 
 routes(app);
 

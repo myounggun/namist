@@ -11,7 +11,7 @@
 var fs = require('fs'),
 	path = require('path'),
 	async = require('async'),
-	gm = require('gm'),
+	gm = require('gm').subClass({imageMagick: true}),
 	CLIENT_PATH = path.join(__dirname, '../../../../../client'),
 	IMAGE_BASE_PATH = CLIENT_PATH + "/images/",
 	THUMB_BASE_PATH = CLIENT_PATH + "/thumbs/",
@@ -36,16 +36,10 @@ function uploadImage(files, done) {
          createThumbFile
      ],
      function (err, filename) {
-    	if (err) {
-            console.log(err);
-            done(err);
-            return
-        }
-
 		var imageURL = '/images/' + filename;
 		var thumbURL = '/thumbs/' + filename;
 
-    	done(null, imageURL, thumbURL);
+    	done(err, imageURL, thumbURL);
      });
 }
 
@@ -58,14 +52,13 @@ function removeImage(urls, done) {
         	var url = CLIENT_PATH + urls[index++];
         	if (!url) {
         		callback(IMAGE_NOT_FOUND);
+        		return;
         	}
 
         	fs.exists(url, function (exists) {
         		if (exists) {
         			fs.unlink(url, function (err) {
-        				if (err) callback(err);
-
-        				callback(null);
+        				callback(err);
         			});
         		} else {
         			callback(IMAGE_NOT_FOUND);
@@ -73,14 +66,7 @@ function removeImage(urls, done) {
         	});
         },
         function (err, urls) {
-        	if (err) {
-                console.log(err);
-                done(err);
-            } else {
-                done();
-            }
-        	
-
+        	done(err);
         }
     );
 }
@@ -95,17 +81,11 @@ function readImageFile(files, callback) {
 	
 	if (!IMAGE_TYPES.test(filename)) {
 		callback(IS_NOT_IMAGE_FILE_FORMAT);
+		return;
 	}
 	
 	fs.readFile(filePath, function (err, data) {
-		if (err) {
-            console.log(err);
-            callback(err);
-        } else {
-            callback(null, filename, data);
-        }
-
-
+		callback(err, filename, data);
 	});
 }
 
@@ -116,30 +96,19 @@ function saveImageFile(filename, data, callback) {
 		savePath = IMAGE_BASE_PATH + filename;
 	
 	fs.writeFile(savePath, data, function (err) {
-		if (err) {
-            callback(err);
-        } else {
-            callback(null, filename, data);
-        }
-
-
+		callback(err, filename, data);
 	});
 }
 
 function createThumbFile(filename, data, callback) {
-	var srcPath = IMAGE_BASE_PATH + filename;
-	var dstPath = THUMB_BASE_PATH + filename;
-	var imagic = gm.subClass({imageMagick: true});
-
-    imagic(srcPath)
+	var srcPath = IMAGE_BASE_PATH + filename,
+		dstPath = THUMB_BASE_PATH + filename;
+	
+    gm(srcPath)
 	.resize(THUM_SIZE, THUM_SIZE)
 	.noProfile()
 	.write(dstPath, function (err) {
-		if (err) {
-            callback(err);
-        } else {
-            callback(null, filename);
-        }
+		callback(err, filename);
 	});
 }
 

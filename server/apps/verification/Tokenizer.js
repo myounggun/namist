@@ -23,18 +23,18 @@ module.exports = function(req, res) {
 		sendVerificationEmail: function(user, token) {
 			var verifyUrl = req.protocol + "://" + req.get('host') + "/verify/" + token,
 				mailBody = [
-					'<strong>Thanks for joining Namist! Please activate your account below:</strong> <br /><br />',
-					'<a href="'+ verifyUrl +'" target="_blank">Activate Account</a><br /><br />',
-					'Or copy and paste this link into your browser:<br />',
-					'<a href="'+ verifyUrl +'" target="_blank">'+ verifyUrl +'</a><br /><br />',
-					'If something isn\'t working, please don\'t contact us.<br /><br />',
-					'Thanks,<br />The Namist Team<br /><br />'
+                    res.__('MAIL_BODY_VERIFICATION_1') + '<br /><br />',
+                    '<a href="'+ verifyUrl +'" target="_blank">' + res.__('MAIL_BODY_VERIFICATION_BUTTON') + '</a><br /><br />',
+                    res.__('MAIL_BODY_VERIFICATION_2') + '<br />',
+                    '<a href="' + verifyUrl + '" target="_blank">' + verifyUrl + '</a><br /><br />',
+                    res.__('MAIL_BODY_CALL_ME') + '<br /><br />',
+                    res.__('MAIL_BODY_THX') + '<br />' + res.__('MAIL_BODY_TEAM') + '<br /><br />'
 				].join('');
 
 			mail({
 				from: 'namist <noreply@namist.com>',
 				to: user.username +' <'+ user.email +'>',
-				subject: '[Namist] Activate your Namist account',
+				subject: res.__('MAIL_SUBJECT_VERIFICATION'),
 				html: mailBody,
 			});
 		}

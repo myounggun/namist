@@ -12,7 +12,7 @@ var express		  = require('express')
   , engine        = require('ejs-locals')
   , flash         = require('express-flash')
   , globalLocals  = require('./modules/global-locals')
-  , I18N          = require('i18n');
+  , i18n          = require('i18n');
 
 var passport		= require('passport');
 var LocalStrategy	= require('passport-local').Strategy;
@@ -33,11 +33,11 @@ db.on('open', function () {
 
 var app = express();
 
-I18N.configure({
+i18n.configure({
     locales: ['ko', 'en'],
     directory: path.join(__dirname, '/apps/locales'),
     defaultLocale: 'en',
-    cookie: 'namist'
+    cookie: 'locale'
 });
 
 // all environments
@@ -62,7 +62,7 @@ app.use(express.session({cookie: {maxAge:60000}}));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(I18N.init);
+app.use(i18n.init);
 app.use(app.router);
 
 routes(app);

@@ -1,6 +1,5 @@
 var async = require('async'),
     passport = require('passport'),
-    I18N = require('i18n'),
     Account = require('../model/Account'),
     CertificationTokenizer = require('../../verification/Tokenizer.js'),
     PasswordTokenizer = require('../util/PasswordTokenizer.js'),
@@ -257,7 +256,6 @@ function CustomError (message) {
 
 function throwError (req, res, err, renderTarget) {
     if (err.name === 'CustomError') {
-//        req.flash('warning', err.message);
         req.flash('warning', res.__(err.message));
         return res.render(renderTarget);
     }

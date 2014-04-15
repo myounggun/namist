@@ -3,7 +3,7 @@
  * brew install graphicsmagick
  * npm install graphicsmagick
  */
-var gm = require('gm'),
+var gm = require('gm').subClass({imageMagick: true}),
 	path = require('path'),
 	fs = require('fs'),
 	async = require('async');

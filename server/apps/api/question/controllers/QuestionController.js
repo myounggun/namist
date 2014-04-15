@@ -81,7 +81,11 @@ function submit(req, res) {
                     } ]
                 }
             }
-        }, function(){ console.log(arguments); }
+        }, function(err, numberAffected, raw){
+            if(!raw.err) {
+                res.send("success");
+            }
+        }
     );
 }
 

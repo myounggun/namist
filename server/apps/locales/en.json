@@ -42,6 +42,19 @@
     "Namist will send authentication instructions to your email address.": "Namist will send authentication instructions to your email address.",
     "Re-enter New Password": "Re-enter New Password",
 
+    "MAIL_SUBJECT_PASSWORD": "[Namist] Password Reset Confirmation",
+    "MAIL_BODY_PASSWORD_1": "To reset your password to sign in to Namist. Please click the link below to complete your new password request:",
+    "MAIL_BODY_PASSWORD_2": "Or copy and paste this link into your browser:",
+    "MAIL_BODY_PASSWORD_BUTTON": "Reset Password",
+    "MAIL_BODY_CALL_ME": "If something isn't working, please don't contact us.",
+    "MAIL_BODY_THX": "Thanks,",
+    "MAIL_BODY_TEAM": "The Namist Team",
+
+    "MAIL_SUBJECT_VERIFICATION": "[Namist] Activate your Namist account",
+    "MAIL_BODY_VERIFICATION_1": "Thanks for joining Namist! Please activate your account below:",
+    "MAIL_BODY_VERIFICATION_2": "Or copy and paste this link into your browser:",
+    "MAIL_BODY_VERIFICATION_BUTTON": "Activate Account",
+
     "FAILURE_NO_USER": "Sorry, we didn't recognize your account details. Please check your user name and password, then try again.",
     "FAILURE_ACCESS_DENIED": "Access to Namist has been denied.",
     "FAILURE_UNLINK_ACCOUNT": "Failed to unlink account."

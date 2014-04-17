@@ -42,7 +42,16 @@ i18n.configure({
 
 // all environments
 
-app.set('port', process.env.PORT || 3000);
+var port = process.env.PORT || 3000,
+  env = process.env.NODE_ENV || "development";
+
+var bodyParser = require('body-parser'),
+  cookieParser = require('cookie-parser'),
+  favicon = require('static-favicon'),
+  logger = require('morgan'),
+  methodOverride = require('method-override'),
+  session = require('express-session');
+
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('ejs', engine);
@@ -52,20 +61,29 @@ app.use(globalLocals({
   user: null
 }));
 
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
+app.use(favicon());
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
+app.use(cookieParser('namist'));
+app.use(methodOverride());
 app.use(express.static(path.join(__dirname, '../client')));
-app.use(express.cookieParser('namist'));
-app.use(express.session({cookie: {maxAge:60000}}));
+
+routes(app);
+
+app.use(session({cookie: {maxAge:60000}}));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(i18n.init);
-app.use(app.router);
+// app.use(app.router);
 
-routes(app);
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
 
 var Account = require('./apps/account/model/Account');
 passport.use(new LocalStrategy(Account.authenticate()));
@@ -73,8 +91,14 @@ passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
 // development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+if ('development' == env) {
+  app.use(function(err, req, res, next) {
+      res.status(err.status || 500);
+      // res.render('error', {
+      //     message: err.message,
+      //     error: err
+      // });
+  });
 }
 
 app.post('/upload', function(req, res){
@@ -84,6 +108,9 @@ app.post('/upload', function(req, res){
 
 });
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+
+app.set('port', port);
+
+var server = app.listen(port, function() {
+  console.log('Express server listening on port ' + server.address().port);
 });

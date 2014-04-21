@@ -29,7 +29,7 @@ module.exports = function (req, res) {
 
             mail({
                 from: 'namist <noreply@namist.com>',
-                to: user.username +' <'+ user.email +'>',
+                to: user.username +' <'+ user.local.email +'>',
                 subject: res.__('MAIL_SUBJECT_PASSWORD'),
                 html: mailBody
             });

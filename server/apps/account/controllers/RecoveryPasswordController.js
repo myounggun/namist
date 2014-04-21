@@ -1,18 +1,13 @@
-var Account = require('../model/Account'),
+var User = require('../model/User'),
     PasswordToken = require('../model/PasswordToken');
 
 module.exports = {
-    verify: function (req, res) {
+    verify: function (req, res, next) {
         var token = req.params.token;
 
         verifyUser(token, function (err, user) {
             if (err) {
-                if (err.name === 'CustomError') {
-                    res.send(err.message);
-                    res.end();
-                }
-
-                throw err;
+                return next(err);
             }
 
             res.render('formNewPassword', {id: user._id});
@@ -27,18 +22,18 @@ function verifyUser (token, done) {
         }
 
         if (!refToken) {
-            var err = new Error('Access to Namist has been denied');
-            err.name = 'CustomError';
+            var err = new Error();
+            err.status = 400;
 
             return done(err, null);
         }
 
-        Account.findOne({_id: refToken._userId}, function (err, user) {
+        User.findOne({_id: refToken._userId}, function (err, user) {
             if (err) {
                 return done(err, null);
             }
 
             done(null, user);
         });
-    })
+    });
 }

@@ -1,5 +1,5 @@
 /**
- * 문제 출제 목록/조회 
+ * 문제 출제 목록/조회
  */
 var Question = require('../../../admin/question/Question');
 var async = require('async');
@@ -10,9 +10,9 @@ var async = require('async');
 function list(req, res) {
 	var page     = parseInt(req.query.page, 10);
 	var pageSize = parseInt(req.query.pageSize, 10) || 3;
-	
+
 	var pagingOption = {};
-	
+
 	if (page) {
 		pagingOption = {
 				sort  : {id: -1},
@@ -28,7 +28,7 @@ function list(req, res) {
    			});
    		},
    		function(totalCount, callback) {
-   			
+
    			Question.find({}, {}, pagingOption, function (err, docs) {
    				var result = {
    						page      : page,
@@ -40,7 +40,7 @@ function list(req, res) {
    				res.json(result);
  			});
    		}
-   	], 
+   	],
    	function (err, result) {
  		if (err) throw err;
    	});
@@ -52,7 +52,7 @@ function list(req, res) {
 function read(req, res) {
 	Question.findOne({
 		id: req.query.id
-	}, 
+	},
 	function(err, doc) {
         console.log(doc)
 		res.json(refineDoc(doc));
@@ -163,7 +163,7 @@ function refineDoc(doc) {
 		image   : doc.image,
 		time    : doc.time,
 		titles  : doc.titles,
-		
+
 		displayDate : doc.displayDate // virtual
 	}
 }

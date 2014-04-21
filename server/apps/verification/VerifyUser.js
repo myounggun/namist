@@ -8,9 +8,9 @@ module.exports = function(token, done) {
 
         if (!refToken) return done(new Error('unrecognized token!'), null, 'NoToken');
 
-        var Account = require('../account/model/Account');
+        var User = require('../account/model/User');
 
-        Account.findOne({
+        User.findOne({
             _id: refToken._userId
         }, function(err, user) {
             if (err) return done(err, null, 'NoAccount');

@@ -1,5 +1,4 @@
-var express = require('express'),
-    app = module.exports = express(),
+var app = express(),
     accountController = require('./controllers/AccountController'),
     recoveryController = require('./controllers/RecoveryPasswordController');
 
@@ -68,3 +67,5 @@ app.get('/account/facebook/callback', passport.authenticate('facebook', {
     successRedirect : '/',
     failureRedirect : '/account/signin'
 }));
+
+module.exports = app;

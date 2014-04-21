@@ -12,13 +12,13 @@ var express		  = require('express')
   , engine        = require('ejs-locals')
   , flash         = require('express-flash')
   , globalLocals  = require('./modules/global-locals')
-  , i18n          = require('i18n');
-
-var passport		= require('passport');
-var LocalStrategy	= require('passport-local').Strategy;
+  , i18n          = require('i18n')
+  , passport	  = require('passport');
 
 var MONGO_URI = 'mongodb://namist:mapfe@58.229.6.204:27017/namist';
 mongoose.connect(MONGO_URI);
+
+require('./apps/account/config/passport')(passport);
 
 var db = mongoose.connection;
 autoIncrement.initialize(db);
@@ -47,9 +47,9 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('ejs', engine);
 app.use(globalLocals({
-  appname: "제목학원",
-  title: "",
-  user: null
+    appname: "제목학원",
+    title: "",
+    user: null
 }));
 
 app.use(express.favicon());
@@ -66,11 +66,6 @@ app.use(i18n.init);
 app.use(app.router);
 
 routes(app);
-
-var Account = require('./apps/account/model/Account');
-passport.use(new LocalStrategy(Account.authenticate()));
-passport.serializeUser(Account.serializeUser());
-passport.deserializeUser(Account.deserializeUser());
 
 // development only
 if ('development' == app.get('env')) {

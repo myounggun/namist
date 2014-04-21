@@ -16,7 +16,7 @@
     "Sign Up": "가입하기",
     "It's free and anyone can join": "언제까지나 무료로 즐길 수 있습니다",
     "Your email address": "이메일",
-    "New Username": "아이디",
+    "New Username": "이름",
     "New Password": "비밀번호",
     "Please enter a valid email address.": "유효한 이메일 주소가 아닙니다. 다시 입력해 주세요.",
     "Sorry!": "죄송합니다",
@@ -56,6 +56,5 @@
     "MAIL_BODY_VERIFICATION_BUTTON": "계정 활성화",
 
     "FAILURE_NO_USER": "입력한 계정 정보가 어느 계정에도 속해 있지 않습니다. 정확하게 입력되었는지 확인해 주세요.",
-    "FAILURE_ACCESS_DENIED": "Access to Namist has been denied",
     "FAILURE_UNLINK_ACCOUNT": "사용자 계정 삭제를 실패했습니다."
 }

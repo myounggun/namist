@@ -1,271 +1,165 @@
 var async = require('async'),
-    passport = require('passport'),
-    Account = require('../model/Account'),
+    i18n = require('i18n'),
+    User = require('../model/User'),
     CertificationTokenizer = require('../../verification/Tokenizer.js'),
     PasswordTokenizer = require('../util/PasswordTokenizer.js'),
-    ErrorHandling = require('../util/MongoDBErrorHandler.js');
+    MongoDBErrorChecker = require('../util/MongoDBErrorChecker.js');
 
-function onSignIn (req, res) {
-    async.waterfall([
-        function (cb) {
-            passport.authenticate('local', function (err, user) {
-                if (err) {
-                    cb(err);
-                }
+module.exports = {
+    processSignUp: function (req, res, next) {
+        if (!req.isAuthenticated()) {
+            var err = new Error();
+            err.status = 400;
 
-                if (!user) {
-                    return cb(CustomError('FAILURE_NO_USER'));
-                }
-
-                cb(null, user);
-            })(req, res);
-        },
-        function (user, cb) {
-            req.logIn(user, function (err) {
-                if (err) {
-                    cb(err);
-                }
-
-                cb(null, user);
-            });
-        }
-    ], function (err, result) {
-        if (err) {
-            return throwError(req, res, err, 'formSignIn');
+            return next(err);
         }
 
-        if (result.authentication) {
+        var user = req.user,
+            authByToken = CertificationTokenizer(req, res);
+
+        authByToken.createToken(user, function (err, token) {
+            if (err) {
+                return next(err);
+            }
+
+            authByToken.sendVerificationEmail(user, token);
+            res.redirect('/');
+        });
+    },
+    processSignIn: function (req, res, next) {
+        if (!req.isAuthenticated()) {
+            var err = new Error();
+            err.status = 400;
+
+            return next(err);
+        }
+
+        var user = req.user;
+
+        if (user.authentication) {
             res.redirect('/');
         } else {
             res.redirect('/account/profile');
         }
-    });
-}
+    },
+    processRequestPasswordRecovery: function (req, res, next) {
+        var email = req.body.email,
+            username = req.body.username;
 
-function onSignUp (req, res) {
-    var username = req.body.username,
-        email = req.body.email,
-        password = req.body.password;
+        async.waterfall([
+            function (cb) {
+                User.findOne({'local.email': email}, function (err, user) {
+                    if (err) {
+                        return cb(err);
+                    }
 
-    async.waterfall([
-        function (cb) {
-            Account.register(new Account({
-                username: username,
-                email: email
-            }), password, cb);
-        },
-        function (user, cb) {
-            var authByToken = CertificationTokenizer(req, res);
+                    if (!user || (username !== user.username )) {
+                        req.flash('warning', i18n.__('FAILURE_NO_USER'));
+                        return res.render('formRecoverPassword');
+                    }
 
-            authByToken.createToken(user, function (err, token) {
-                if (err) {
-                    cb(err);
-                }
+                    cb(null, user);
+                });
+            },
+            function (user, cb) {
+                var passwordToken = new PasswordTokenizer(req, res);
 
-                cb(null, user, authByToken, token);
-            });
-        },
-        function (user, authByToken, token, cb) {
-            authByToken.sendVerificationEmail(user, token);
-            passport.authenticate('local')(req, res, function () {
-                res.send('Send verification email by token \''+ token +'\'. Complete!');
-                cb(null, user);
-            });
-        }
-    ], function (err, result) {
-        if (err) {
-            var msg = ErrorHandling(err);
+                passwordToken.createToken(user, function (err, token) {
+                    if (err) {
+                        return cb(err);
+                    }
 
-            if (msg) {
-                req.flash('warning', msg);
-                res.render('formSignUp');
-            } else {
-                throw err;
+                    passwordToken.sendRecoveryEmail(user, token);
+                    cb(null, user);
+                });
             }
-        } else {
+        ], function (err, result) {
+            if (err) {
+                return next(err);
+            }
+
             res.redirect('/');
-        }
-    });
-}
+        });
+    },
+    processResetPassword: function (req, res, next) {
+        var password = req.body.password,
+            confirm = req.body.confirm;
 
-function onRecover (req, res) {
-    var username = req.body.username,
-        email = req.body.email;
+        User.findById(req.params.id, function (err, user) {
+            if (err) {
+                return next(err);
+            }
 
-    async.waterfall([
-        function (cb) {
-            Account.findOne({username: username}, function (err, user) {
-                if (err) {
-                    throw err;
-                }
+            if (!user) {
+                var err = new Error();
+                err.status = 400;
 
-                if (!user || (email !== user.email)) {
-                    return cb(CustomError('FAILURE_NO_USER'));
-                }
+                return next(err);
+            }
 
-                cb(null, user);
-            });
-        },
-        function (user, cb) {
-            var passwordToken = PasswordTokenizer(req, res);
+            user.local.password = user.generateHash(confirm);
 
-            passwordToken.createToken(user, function (err, token) {
-                if (err) {
-                    cb(err);
-                }
-
-                cb(null, user, passwordToken, token);
-            });
-        },
-        function (user, passwordToken, token, cb) {
-            passwordToken.sendRecoveryEmail(user, token);
-            cb(null);
-        }
-    ], function (err, result) {
-        if (err) {
-            return throwError(req, res, err, 'formRecoverPassword');
-        }
-
-        res.redirect('/');
-    });
-}
-
-function onReset (req, res) {
-    var id = req.params.id,
-        password = req.body.password,
-        confirm = req.body.confirm;
-
-    async.waterfall([
-        function (cb) {
-            Account.findOne({_id: id}, function (err, user) {
-                if (err) {
-                    cb(err);
-                }
-
-                if (!user) {
-                    return cb(CustomError('FAILURE_ACCESS_DENIED'));
-                }
-
-                cb(null, user);
-            });
-        },
-        function (user, cb) {
-            user.setPassword(confirm, cb);
-        },
-        function (user, cb) {
             user.save(function (err) {
                 if (err) {
-                    cb(err);
+                    return next(err);
                 }
 
-                cb(null);
+                res.redirect('/account/signin');
             });
-        }
-    ], function (err, result) {
-        if (err) {
-            return throwError(req, res, err, 'formNewPassword');
-        }
-
-        res.redirect('/account/signin');
-    });
-}
-
-function onDelete (req, res) {
-    Account.remove({_id: req.params.id}, function (err, resCode) {
-        if (err) {
-            throw err;
-        }
-
-        if (resCode) {
-            req.logout();
-            res.redirect('/');
-        } else {
-            req.flash('warning', res.__('FAILURE_UNLINK_ACCOUNT'));
-            res.render('formProfile');
-        }
-    });
-}
-
-function onProfileEdit(req, res) {
-    var user = req.user;
-
-    if (!user) {
-        return res.json({
-            status: "error",
-            message: "bad access."
         });
-    }
+    },
+    processDeleteUser: function (req, res, next) {
+        if (!req.isAuthenticated()) {
+            var err = new Error();
+            err.status = 400;
 
-    var conditions = {
-            _id: user._id
-        },
-        update = {
-            authentication: false
-        },
-        updateOptions = {
-            multi: true
-        };
+            return next(err);
+        }
 
-    if (Object.keys(req.body).length === 0) {
-        res.json({
-            status: 'ok',
-            message: "not modified"
+        User.remove({_id: req.params.id}, function (err, resCode) {
+            if (err) {
+                return next(err);
+            }
+
+            if (resCode) {
+                req.logout();
+                res.redirect('/');
+            } else {
+                req.flash('warning', res.__('FAILURE_UNLINK_ACCOUNT'));
+                res.render('formProfile');
+            }
         });
-    } else {
+    },
+    processEdit: function (req, res, next) {
+        var user = req.user,
+            update = {authentication: false};
+
+        if (Object.keys(req.body).length === 0) {
+            return;
+        }
+
         for (var key in req.body) {
             update[key] = req.body[key];
         }
 
-        Account.update(conditions, update, updateOptions, function(err, numAffected) {
+        User.update({_id: user._id}, update, {multi: true}, function (err, numAffected) {
             if (err) {
-                var message = err.message;
+                var msg = MongoDBErrorChecker(err);
 
-                switch (err.name) {
-                    case 'MongoError':
-                        if (message.indexOf("$email") > -1) {
-                            message = '중복된 email이 있습니다.';
-                        } else if (message.indexOf("$username") > -1) {
-                            message = '중복된 username이 있습니다.';
-                        } else {
-                            message = "알수없는 오류";
-                        }
-
-                        break;
+                if (msg) {
+                    return res.json({
+                        status: 'error',
+                        message: i18n.__(msg)
+                    });
+                } else {
+                    return next(err);
                 }
-
-                return res.json({
-                    status: "error",
-                    message: message
-                });
             }
 
             res.json({
                 status: 'ok',
-                message: numAffected +" field(s) modified."
+                message: numAffected + ' field(s) modified.'
             });
         });
     }
-}
-
-function CustomError (message) {
-    var err = new Error(message);
-    err.name = 'CustomError';
-
-    return err;
-}
-
-function throwError (req, res, err, renderTarget) {
-    if (err.name === 'CustomError') {
-        req.flash('warning', res.__(err.message));
-        return res.render(renderTarget);
-    }
-
-    throw err;
-}
-
-exports.signup = onSignUp;
-exports.signin = onSignIn;
-exports.delete = onDelete;
-exports.profileEdit = onProfileEdit;
-exports.recover = onRecover;
-exports.reset = onReset;
+};

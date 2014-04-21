@@ -1,9 +1,10 @@
 /**
  * 짤방 문제 API
  */
-var app = express(),
-	fs = require('fs'),
-	im = require('imagemagick');
+var express = require('express');
+var app = module.exports = express();
+var fs = require('fs');
+var im = require('imagemagick');
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -103,4 +104,3 @@ function getFiles(dir, list){
     }
 }
 
-module.exports = app;

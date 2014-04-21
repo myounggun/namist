@@ -1,8 +1,10 @@
 /**
  * 문제 출제 담당 페이지
  */
-var app = express(),
-	controller = require('./controllers/QuestionController');
+var express = require('express');
+var app = module.exports = express();
+
+var controller = require('./controllers/QuestionController');
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -15,5 +17,3 @@ app.post('/admin/question/create', controller.create);
 app.get('/admin/question/:id', controller.read);
 app.put('/admin/question', controller.update);
 app.del('/admin/question', controller.del);
-
-module.exports = app;

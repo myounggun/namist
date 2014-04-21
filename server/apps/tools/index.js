@@ -1,5 +1,4 @@
-var express = require('express'),
-    app = express(),
+var app = express(),
     controller = require('./controllers/ToolsController');
 
 app.set('views', __dirname + '/views' );

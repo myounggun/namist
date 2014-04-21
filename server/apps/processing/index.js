@@ -1,5 +1,5 @@
 /**
- * 이미지 프로세싱 테스트 
+ * 이미지 프로세싱 테스트
  */
 var express = require('express');
 var app = module.exports = express();

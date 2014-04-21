@@ -21,8 +21,16 @@
 		<li class="buttons">
 			<input type="button" value="삭제" data-doc-id="<%= doc['_id'] %>" />
 		</li>
-		<% for (var key in doc) { %>
-		<li><%= key %> : <%= doc[key] %></li>
+		<% for (var key in doc) {
+            if (typeof doc[key] === 'object') {
+                for (var innerKey in doc[key]) {
+                    if (innerKey === 'password' || innerKey === 'email') {
+        %>
+		        <li><%= key + '-' + innerKey %> : <%= doc[key][innerKey] %></li>
+            <% }} %>
+        <% } else { %>
+            <li><%= key %> : <%= doc[key] %></li>
+        <% } %>
 		<% } %>
 	</ul>
 	<% } %>

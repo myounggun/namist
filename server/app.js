@@ -2,8 +2,7 @@
 global.express = require('express');
 
 var path = require('path'),
-    passport = require('passport'),
-    LocalStrategy = require('passport-local').Strategy;
+    passport = require('passport');
 
 // mongoose
 var mongoose = require('mongoose'),
@@ -24,6 +23,9 @@ db.on('error', function (msg) {
 db.on('open', function () {
     console.log('database connected');
 });
+
+// passport
+require('./apps/account/config/passport')(passport);
 
 // i18n
 var i18n = require('i18n');
@@ -77,6 +79,8 @@ app.use(function (req, res, next) {
     req.__ = function () {
         return i18n.__.apply(res, arguments);
     };
+
+    next();
 });
 
 routes(app);

@@ -31,7 +31,8 @@ i18n.configure({
     locales: ['ko', 'en'],
     directory: path.join(__dirname, '/apps/locales'),
     defaultLocale: 'en',
-    cookie: 'locale'
+    cookie: 'locale',
+    updateFiles: false
 });
 
 // express
@@ -72,6 +73,11 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(i18n.init);
+app.use(function (req, res, next) {
+    req.__ = function () {
+        return i18n.__.apply(res, arguments);
+    };
+});
 
 routes(app);
 

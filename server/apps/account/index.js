@@ -1,5 +1,4 @@
-var express = require('express'),
-    app = module.exports = express(),
+var app = express(),
     passport = require('passport'),
     accountController = require('./controllers/AccountController'),
     recoveryController = require('./controllers/RecoveryPasswordController');
@@ -72,3 +71,5 @@ function isLoggedIn (req, res, next) {
 
     res.redirect('/');
 }
+
+module.exports = app;

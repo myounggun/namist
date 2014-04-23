@@ -1,5 +1,5 @@
 /**
- * 짤방 문제 API 
+ * 짤방 문제 API
  */
 var express = require('express');
 var app = module.exports = express();
@@ -8,7 +8,6 @@ var im = require('imagemagick');
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
-app.use(express.bodyParser());
 
 var newPath = __dirname + "/images/";
 var thumbPath = __dirname + "/thumbs/";
@@ -17,50 +16,50 @@ if(!fs.existsSync(newPath)){fs.mkdirSync(newPath);}
 if(!fs.existsSync(thumbPath)){fs.mkdirSync(thumbPath);}
 
 app.post('/api/upload/image', function(req, res){
-	
+
 	var tempFilePath = req.files.image.path;
 	fs.readFile(req.files.image.path, function (err, data) {
 
 		var imageName = req.files.image.name
 		/// If there's an error
 		if(!imageName){
-			
+
 			res.redirect("/api/upload/error");
 
 		} else {
-		 
+
 		  newPath = newPath + imageName;
 		  thumbPath = thumbPath + imageName;
-		  
+
 		  /// write file to uploads/fullsize folder
 		  fs.writeFile(newPath, data, function (err) {
 		  	/// let's see it
-			
+
 			res.redirect("/api/viewImage/list");
-		  	
+
 
 		  });
-		  
+
 		}
 	});
-	
+
 });
 app.get('/api/upload/test', function(req, res){
-	
+
 	res.render("uploadTest");
-	
+
 });
 app.get('/api/viewImage/list', function (req, res){
-	
+
 	var list = [];
 	getFiles(__dirname + "/images/", list);
 	res.render("list", {list:list});
 
 });
 app.get('/api/upload/error', function(req, res){
-	
+
 	res.render("uploadError");
-	
+
 });
 app.get('/api/viewImage/:file', function (req, res){
 	file = req.params.file;
@@ -82,10 +81,10 @@ app.get('/api/deleteImage/:file', function (req, res){
 	      res.redirect("/api/viewImage/list");
 	    });
 	 }else{
-		 
+
 		 res.redirect("/api/viewImage/list");
 	 }
-	 
+
 });
 
 function getFiles(dir, list){
@@ -100,7 +99,7 @@ function getFiles(dir, list){
             	name : files[i],
             	path : fullPath
             });
-            
+
         }
     }
 }

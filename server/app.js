@@ -11,6 +11,7 @@ var mongoose = require('mongoose'),
     autoIncremental = require('mongoose-auto-increment'),
     db;
 
+
 mongoose.connect(MONGO_URI);
 
 db = mongoose.connection;
@@ -74,17 +75,13 @@ app.use(i18n.init);
 
 routes(app);
 
+
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
-
-var Account = require('./apps/account/model/Account');
-passport.use(new LocalStrategy(Account.authenticate()));
-passport.serializeUser(Account.serializeUser());
-passport.deserializeUser(Account.deserializeUser());
 
 // development only
 if ('development' == env) {

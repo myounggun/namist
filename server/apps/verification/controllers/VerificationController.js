@@ -6,7 +6,7 @@ module.exports = {
     verify: function(req, res, next) {
         var token = req.params.token;
 
-        VerifyUser(token, function(err, account, resText) {
+        VerifyUser(token, function(err, user, resText) {
             if (err) {
                 console.log(err);
                 res.render('verifyFailure', {
@@ -19,8 +19,8 @@ module.exports = {
                 var locals = {
                         "token": token,
                         "account": {
-                            "username": account.username,
-                            "email": account.email
+                            "username": user.username,
+                            "email": user.local.email
                         }
                     },
                     tplName = 'verify'+ resText; // ['Success', 'Already']
@@ -29,8 +29,8 @@ module.exports = {
                     locals: {
                         "token": token,
                         "account": {
-                            "username": account.username,
-                            "email": account.email
+                            "username": user.username,
+                            "email": user.local.email
                         }
                     },
                     cache: false

@@ -1,4 +1,4 @@
-var Account = require('../model/Account'),
+var Account = require('../model/User'),
     appConfig = {
         clientID  : '236906433099932',
         clientSecret : '7c2dd36b4a71a1ab3d7500c8760538ae',
@@ -17,7 +17,7 @@ function onResponseFromFB (req, accessToken, refreshToken, profile, done) {
 };
 
 function registerNewUser (req, accessToken, refreshToken, profile, done) {
-    Account.findOne({'facebook.id' : profile.id}, function(err, user){
+    User.findOne({'facebook.id' : profile.id}, function(err, user){
         if(err){
             return done(err);
         }
@@ -27,7 +27,7 @@ function registerNewUser (req, accessToken, refreshToken, profile, done) {
             return done(null, user);
         }
         else{
-            var newUser = new Account();
+            var newUser = new User();
 
             newUser.facebook.id = profile.id;
             newUser.facebook.token = accessToken;

@@ -1,7 +1,6 @@
 var LocalStrategy = require('passport-local').Strategy,
     User = require('../model/User'),
-    passport = require('passport'),
-    i18n = require('i18n');
+    passport = require('passport');
 
 module.exports = function () {
     /**
@@ -31,11 +30,11 @@ module.exports = function () {
             }
 
             if (!user) {
-                return done(null, false, req.flash('warning', i18n.__('FAILURE_NO_USER')));
+                return done(null, false, req.flash('warning', req.__('FAILURE_NO_USER')));
             }
 
             if (!user.isValidPassword(password)) {
-                return done(null, false, req.flash('warning', i18n.__('FAILURE_NO_USER')));
+                return done(null, false, req.flash('warning', req.__('FAILURE_NO_USER')));
             }
 
             return done(null, user);
@@ -57,7 +56,7 @@ module.exports = function () {
                 }
 
                 if (user) {
-                    return done(null, false, req.flash('warning', 'That email is already taken.'));
+                    return done(null, false, req.flash('warning', req.__('FAILURE_ALREADY_EMAIL')));
                 } else {
                     var username = req.body.username;
 
@@ -67,7 +66,7 @@ module.exports = function () {
                         }
 
                         if (user) {
-                            return done(null, false, req.flash('warning', 'That username is already taken.'));
+                            return done(null, false, req.flash('warning', req.__('FAILURE_ALREADY_USER')));
                         } else {
                             var newUser = new User();
 

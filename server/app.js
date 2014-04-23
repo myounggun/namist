@@ -2,8 +2,7 @@
 global.express = require('express');
 
 var path = require('path'),
-    passport = require('passport'),
-    LocalStrategy = require('passport-local').Strategy;
+    passport = require('passport');
 
 // mongoose
 var mongoose = require('mongoose'),
@@ -25,13 +24,17 @@ db.on('open', function () {
     console.log('database connected');
 });
 
+// passport
+require('./apps/account/config/passport')(passport);
+
 // i18n
 var i18n = require('i18n');
 i18n.configure({
     locales: ['ko', 'en'],
     directory: path.join(__dirname, '/apps/locales'),
     defaultLocale: 'en',
-    cookie: 'locale'
+    cookie: 'locale',
+    updateFiles: false
 });
 
 // express
@@ -72,6 +75,13 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(i18n.init);
+app.use(function (req, res, next) {
+    req.__ = function () {
+        return i18n.__.apply(res, arguments);
+    };
+
+    next();
+});
 
 routes(app);
 

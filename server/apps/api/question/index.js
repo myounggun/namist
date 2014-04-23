@@ -1,5 +1,5 @@
 /**
- * 짤방 문제 API 
+ * 짤방 문제 API
  */
 var express = require('express');
 var app = module.exports = express();

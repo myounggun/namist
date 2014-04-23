@@ -1,5 +1,4 @@
-var express = require('express'),
-    app = express(),
+var app = express(),
     controller = require('./controllers/VerificationController');
 
 app.set('views', __dirname + '/views' );

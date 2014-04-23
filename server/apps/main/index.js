@@ -1,8 +1,7 @@
 /**
  * 메인 페이지
  */
-var express = require('express'),
-	controller = require('./controllers/MainController'),
+var controller = require('./controllers/MainController'),
     app = express();
 
 app.set('views', __dirname + '/views' );

@@ -33,13 +33,6 @@ db.on('open', function () {
 
 var app = express();
 
-i18n.configure({
-    locales: ['ko', 'en'],
-    directory: path.join(__dirname, '/apps/locales'),
-    defaultLocale: 'en',
-    cookie: 'locale'
-});
-
 // all environments
 
 app.set('port', process.env.PORT || 3000);
@@ -59,10 +52,27 @@ app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, '../client')));
 app.use(express.cookieParser('namist'));
 app.use(express.session({cookie: {maxAge:60000}}));
+
+i18n.configure({
+    locales: ['en', 'ko'],
+    defaultLocale: 'en',
+    cookie: 'namist',
+    directory: path.join(__dirname, '/apps/locales'),
+    updateFiles: false
+});
+
+app.use(i18n.init);
+
+app.use(function (req, res, next) {
+    req.__ = function () {
+        return i18n.__.apply(res, arguments);
+    };
+    next();
+});
+
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(i18n.init);
 app.use(app.router);
 
 routes(app);

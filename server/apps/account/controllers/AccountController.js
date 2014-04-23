@@ -1,9 +1,7 @@
 var async = require('async'),
-    i18n = require('i18n'),
     User = require('../model/User'),
     CertificationTokenizer = require('../../verification/Tokenizer.js'),
-    PasswordTokenizer = require('../util/PasswordTokenizer.js'),
-    MongoDBErrorChecker = require('../util/MongoDBErrorChecker.js');
+    PasswordTokenizer = require('../util/PasswordTokenizer.js');
 
 module.exports = {
     processSignUp: function (req, res, next) {
@@ -54,7 +52,7 @@ module.exports = {
                     }
 
                     if (!user || (username !== user.username )) {
-                        req.flash('warning', i18n.__('FAILURE_NO_USER'));
+                        req.flash('warning', res.__('FAILURE_NO_USER'));
                         return res.render('formRecoverPassword');
                     }
 
@@ -144,12 +142,25 @@ module.exports = {
 
         User.update({_id: user._id}, update, {multi: true}, function (err, numAffected) {
             if (err) {
-                var msg = MongoDBErrorChecker(err);
+                var msg = err.message;
+
+                switch (err.name) {
+                    case 'MongoError':
+                        if (msg.indexOf('$email') > -1) {
+                            msg = res.__('FAILURE_ALREADY_EMAIL');
+                        } else  if (msg.indexOf('$username') > -1) {
+                            msg = res.__('FAILURE_ALREADY_USER');
+                        } else {
+                            msg = res.__('FAILURE_NOT_AVAILABLE');
+                        }
+
+                        break;
+                }
 
                 if (msg) {
                     return res.json({
                         status: 'error',
-                        message: i18n.__(msg)
+                        message: res.__(msg)
                     });
                 } else {
                     return next(err);

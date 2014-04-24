@@ -1,9 +1,11 @@
 <html>
 <head>
-    <title><%= __("SI_FORM_TITLE") %></title>
+    <title><%= __("TITLE") %></title>
     <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
-    <link rel="stylesheet" href="/stylesheets/account/style.css">
+    <link rel="stylesheet" href="/stylesheets/bootstrap-social.css">
+    <link rel="stylesheet" href="/stylesheets/font-awesome.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
 <div id="sign-in-container" class="account-container">
@@ -29,7 +31,9 @@
                 <a href="/account/signup"><%= __("SI_FORM_SIGN_UP_LINK") %></a>
             </div>
             <div class="button-group">
-               <a href="/account/facebook" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-thumbs-up"></span>Sign in With Facebook</a>
+                <a href="/account/facebook" class="btn btn-block btn-social btn-facebook">
+                    <i class="fa fa-facebook"></i> <%= __("SI_FORM_SOCIAL_FACEBOOK") %>
+                </a>
             </div>
         </div>
         <hr>

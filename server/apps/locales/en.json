@@ -25,6 +25,7 @@
     "SI_FORM_RESET_PASSWORD_LINK": "Forgot your password?",
     "SI_FORM_OR": "or",
     "SI_FORM_SOCIAL_FACEBOOK": "Sign in with Facebook",
+    "SI_FORM_SOCIAL_TWITTER": "Sign in with Twitter",
 
     "SU_FORM_HEADER": "Sign Up",
     "SU_FORM_SUB_HEADER": "It's free and anyone can join",

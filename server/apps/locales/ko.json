@@ -24,7 +24,8 @@
     "SI_FORM_SIGN_UP_LINK": "네이미스트에 가입하세요!",
     "SI_FORM_RESET_PASSWORD_LINK": "비밀번호를 잊으셨나요?",
     "SI_FORM_OR": "또는",
-    "SI_FORM_SOCIAL_FACEBOOK": "Facebook으로 로그인",
+    "SI_FORM_SOCIAL_FACEBOOK": "Facebook 계정으로 로그인하기",
+    "SI_FORM_SOCIAL_TWITTER": "Twitter 계정으로 로그인하기",
 
     "SU_FORM_HEADER": "가입하기",
     "SU_FORM_SUB_HEADER": "언제까지나 무료로 즐길 수 있습니다",

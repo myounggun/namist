@@ -27,9 +27,15 @@ var userSchema = new Schema({
         },
         password: {
             type    : String,
-            require : true,
             trim    : true
         }
+    },
+    // Facebook
+    facebook: {
+        id          : String,
+        token       : String,
+        email       : String,
+        name        : String
     }
 });
 

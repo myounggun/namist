@@ -1,5 +1,7 @@
 var LocalStrategy = require('passport-local').Strategy,
+    FacebookStrategy = require('passport-facebook').Strategy,
     User = require('../model/User'),
+    ConfigAuth = require('./auth'),
     passport = require('passport');
 
 module.exports = function () {
@@ -91,6 +93,91 @@ module.exports = function () {
             user.local.email = email;
             user.local.password = user.generateHash(password);
             user.username = req.body.username;
+
+            user.save(function (err) {
+                if (err) {
+                    throw err;
+                }
+
+                return done(null, user);
+            });
+        }
+    }));
+
+    /**
+     * Facebook
+     */
+    passport.use(new FacebookStrategy({
+        clientID: ConfigAuth.facebookAuth.clientID,
+        clientSecret: ConfigAuth.facebookAuth.clientSecret,
+        callbackURL: ConfigAuth.facebookAuth.callbackURL,
+        passReqToCallback : true
+    }, function (req, token, refreshToken, profile, done) {
+        if (!req.user) {
+            User.findOne({'facebook.id': profile.id}, function (err, user) {
+                if (err) {
+                    return done(err);
+                }
+
+                if (user) {
+                    if (!user.facebook.token) {
+                        user.facebook.token = token;
+                        user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
+                        user.facebook.email = profile.emails[0].value;
+
+                        user.save(function (err) {
+                            if (err) {
+                                throw err;
+                            }
+
+                            return done(null, user);
+                        });
+                    }
+
+                    return done(null, user);
+                } else {
+                    var newUser = new User();
+
+                    newUser.facebook.id = profile.id;
+                    newUser.facebook.token = token;
+                    newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName;
+                    newUser.facebook.email = profile.emails[0].value;
+
+                    newUser.username = profile.username;
+                    newUser.authentication = true;
+
+                    newUser.local.email = profile.emails[0].value;
+
+                    newUser.save(function(err){
+                        if(err){
+                            var msg = err.message;
+
+                            switch (err.name) {
+                                case 'MongoError':
+                                    if (msg.indexOf('$email') > -1) {
+                                        msg = req.__('FAILURE_ALREADY_EMAIL');
+                                    } else  if (msg.indexOf('$username') > -1) {
+                                        msg = req.__('FAILURE_ALREADY_USER');
+                                    } else {
+                                        msg = req.__('FAILURE_NOT_AVAILABLE');
+                                    }
+
+                                    break;
+                            }
+
+                            return done(null, false, req.flash('warning', msg));
+                        }
+                        else{
+                            return done(null, newUser);
+                        }
+                    });
+                }
+            });
+        } else {
+            user.facebook.id = profile.id;
+            user.facebook.token = token;
+            user.facebook.name = profile.name.givenName + ' ' + profile.name.familyName;
+            user.facebook.email = profile.emails[0].value;
 
             user.save(function (err) {
                 if (err) {

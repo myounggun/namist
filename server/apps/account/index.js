@@ -42,27 +42,16 @@ app.get('/account/profile', isLoggedIn, function (req, res) {
 app.put('/account/profile/edit', isLoggedIn, accountController.processEdit);
 app.delete('/account/delete/:id', isLoggedIn, accountController.processDeleteUser);
 
-////for facebook Account
-//var passport = require('passport'),
-//    FacebookStrategy = require('passport-facebook').Strategy,
-//    FBController = require('./controllers/FbAccountController'),
-//    Account = require('./model/Account');
-//
-//passport.serializeUser(function(user, done){
-//    done(null, user.id);
-//});
-//passport.deserializeUser(function(id, done){
-//    Account.findById(id, function(err, user){
-//        done(err, user);
-//    });
-//});
-//passport.use(new FacebookStrategy(FBController.appConfig, FBController.onResponseFromFB));
-//
-//app.get('/account/facebook', passport.authenticate('facebook', { scope: ['email']})); //, 'read_stream', 'publish_actions'
-//app.get('/account/facebook/callback', passport.authenticate('facebook', {
-//    successRedirect : '/',
-//    failureRedirect : '/account/signin'
-//}));
+app.get('/account/facebook', passport.authenticate('facebook', {
+    scope: 'email',
+    failureRedirect: '/account/signin',
+    failureFlash: true
+}));
+app.get('/account/facebook/callback', passport.authenticate('facebook', {
+    successRedirect: '/',
+    failureRedirect: '/account/signin',
+    failureFlash: true
+}));
 
 function isLoggedIn (req, res, next) {
     if (req.isAuthenticated()) {

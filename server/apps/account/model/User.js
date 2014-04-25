@@ -10,6 +10,11 @@ var userSchema = new Schema({
         trim        : true,
         unique      : true
     },
+    // 사용자 사진
+    avatar: {
+        type        : String,
+        default     : null
+    },
     // 이메일 인증 여부 플래그
     authentication: {
         type        : Boolean,

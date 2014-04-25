@@ -2,7 +2,8 @@ var LocalStrategy = require('passport-local').Strategy,
     FacebookStrategy = require('passport-facebook').Strategy,
     User = require('../model/User'),
     ConfigAuth = require('./auth'),
-    passport = require('passport');
+    passport = require('passport'),
+    gravatar = require('gravatar');
 
 module.exports = function () {
     /**
@@ -75,6 +76,7 @@ module.exports = function () {
                             newUser.local.email = email;
                             newUser.local.password = newUser.generateHash(password);
                             newUser.username = username;
+                            newUser.avatar = getGravatar(email);
 
                             newUser.save(function (err) {
                                 if (err) {
@@ -93,6 +95,7 @@ module.exports = function () {
             user.local.email = email;
             user.local.password = user.generateHash(password);
             user.username = req.body.username;
+            user.avatar = getGravatar(email);
 
             user.save(function (err) {
                 if (err) {
@@ -113,6 +116,8 @@ module.exports = function () {
         callbackURL: ConfigAuth.facebookAuth.callbackURL,
         passReqToCallback : true
     }, function (req, token, refreshToken, profile, done) {
+        var email;
+
         if (!req.user) {
             User.findOne({'facebook.id': profile.id}, function (err, user) {
                 if (err) {
@@ -124,6 +129,12 @@ module.exports = function () {
                         user.facebook.token = token;
                         user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
                         user.facebook.email = profile.emails[0].value;
+
+                        if (!user.avatar) {
+                            user.avatar = getFacebookProfilePicture(profile.username);
+                        } else {
+                            user.avatar = getGravatar(profile.emails[0].value);
+                        }
 
                         user.save(function (err) {
                             if (err) {
@@ -145,6 +156,12 @@ module.exports = function () {
 
                     newUser.username = profile.username;
                     newUser.authentication = true;
+
+                    if (!newUser.avatar) {
+                        newUser.avatar = getFacebookProfilePicture(profile.username);
+                    } else {
+                        user.avatar = getGravatar(profile.emails[0].value);
+                    }
 
                     newUser.local.email = profile.emails[0].value;
 
@@ -179,6 +196,12 @@ module.exports = function () {
             user.facebook.name = profile.name.givenName + ' ' + profile.name.familyName;
             user.facebook.email = profile.emails[0].value;
 
+            if (!newUser.avatar) {
+                newUser.avatar = getFacebookProfilePicture(profile.username);
+            } else {
+                user.avatar = getGravatar(profile.emails[0].value);
+            }
+
             user.save(function (err) {
                 if (err) {
                     throw err;
@@ -189,3 +212,15 @@ module.exports = function () {
         }
     }));
 };
+
+function getGravatar (email) {
+    return gravatar.url(email, {
+        s: '100', // Size
+        r: 'g', // Rating
+        d: 'retro'
+    }, true);
+}
+
+function getFacebookProfilePicture (username) {
+    return 'https://graph.facebook.com/' + username + '/picture?width=100&height=100';
+}

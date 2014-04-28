@@ -39,7 +39,6 @@ app.get('/account/profile', isLoggedIn, function (req, res) {
         user: req.user
     });
 });
-app.put('/account/profile/edit', isLoggedIn, accountController.processEdit);
 app.delete('/account/delete/:id', isLoggedIn, accountController.processDeleteUser);
 
 app.get('/account/facebook', passport.authenticate('facebook', {

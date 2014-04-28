@@ -8,6 +8,10 @@
     "BTN_SIGN_IN": "Sign In",
     "BTN_SIGN_UP": "Sign Up",
     "BTN_RECOVER": "Recover",
+    "BTN_GO_HOME": "Home",
+    "BTN_LOGOUT": "Logout",
+    "BTN_DELETE_ACCOUNT": "Delete Account",
+    "BTN_SEND_VERIFICATION_EMAIL": "Send a verification email",
 
     "PLACEHOLDER_EMAIL": "Your email address",
     "PLACEHOLDER_USERNAME": "New Username",
@@ -33,8 +37,8 @@
     "PROFILE_FORM_HEADER": "Profile",
     "PROFILE_FORM_AUTHORIZED": "Authorized",
     "PROFILE_FORM_NOT_AUTHORIZED": "Not Authorized",
-    "PROFILE_FORM_LOCAL_UNLINK": "Unlink",
-    "PROFILE_FORM_VERIFICATION_EMAIL": "Okay, send me a verification email",
+    "PROFILE_FORM_SOCIAL_LINKS": "Linked Social Account Information",
+    "PROFILE_FORM_MY_WORKS": "My Works",
 
     "RECOVER_FORM_HEADER": "Reset Password",
     "RECOVER_FORM_SUB_HEADER": "Please enter your user name and email address to start password recovery",

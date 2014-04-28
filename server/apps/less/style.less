@@ -2,7 +2,6 @@
  * Basic Styles
  */
 body {
-  text-align: center;
   font-size: 14px;
   font-family: 'Raleway', NanumGothic,'나눔고딕', Arial, sans-serif;
 }
@@ -181,20 +180,33 @@ ul {
 }
 
 #profile-container {
-  width: 100%;
+  margin-top: 100px;
 
-  h1 {
-    text-align: center;
+  #profile-header {
+    .glyphicon {
+      margin-right: 5px;
+    }
+
+    .btn-group {
+      margin-top: 50px;
+      float: right;
+    }
   }
 
-  button {
-    margin-top: 5px;
-    margin-left: 5px;
-    float: right;
+  #profile-social {
+    margin-top: 100px;
+
+    h3 {
+      margin-bottom: 50px;
+    }
+
+    .social {
+      margin-top: 10px;
+    }
   }
 
-  .panel-default .glyphicon {
-    margin-right: 5px;
+  #profile-works {
+    margin-top: 100px;
   }
 }
 

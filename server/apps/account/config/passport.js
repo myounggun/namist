@@ -40,6 +40,8 @@ module.exports = function () {
                 return done(null, false, req.flash('warning', req.__('FAILURE_NO_USER')));
             }
 
+            user.avatar = getGravatar(email);
+
             return done(null, user);
         });
     }));
@@ -217,7 +219,7 @@ function getGravatar (email) {
     return gravatar.url(email, {
         s: '100', // Size
         r: 'g', // Rating
-        d: 'retro'
+        d: 'mm'
     }, true);
 }
 

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	<meta property="og:title" content="Jeffrey Youngil Cho : Blog">
-    <meta property="og:type" content="blog">
-    <meta property="og:url" content="http://www.choyoungil.pe.kr">
-    <meta property="og:image" content="http://a1.twimg.com/profile_images/1202154459/n100000831305765_6084.jpg">
+	<meta property="og:title" content="<% if(imageTitle) { %><%= imageTitle %><% } %>">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://www.namist.com">
+    <meta property="og:description" content="오늘의 짤방">
+    <meta property="og:image" content="<% if(imageSrc) { %><%= imageSrc %><% } %>">
 	<title><% if (title) { %><%= title %> | <% } %><%= appname %></title>
 	<link rel="stylesheet" type="text/css" media="all" href="/stylesheets/reset.css" />
 	<link rel="stylesheet" type="text/css" media="all" href="/stylesheets/style.css" />

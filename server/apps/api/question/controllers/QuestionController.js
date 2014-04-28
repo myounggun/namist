@@ -54,7 +54,6 @@ function read(req, res) {
 		id: req.query.id
 	},
 	function(err, doc) {
-        console.log(doc)
 		res.json(refineDoc(doc));
 	});
 }
@@ -82,7 +81,7 @@ function submit(req, res) {
                 }
             }
         }, function(err, numberAffected, raw){
-            if(!raw.err) {
+            if(!err) {
                 res.send("success");
             }
         }

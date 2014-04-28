@@ -60,7 +60,9 @@ app.use(globalLocals({
     messages: null,
     appname: "제목학원",
     title: "",
-    user: null
+    user: null,
+    imageSrc: null,
+    imageTitle: null
 }));
 
 app.use(favicon());

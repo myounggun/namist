@@ -40,7 +40,11 @@
 				<a href="<%= question.image %>" target="_blank"><%= question.image %></a>
 				<input type="hidden" name="image" size="50" value="<%= question.image %>" required/><br>
 				<input type="hidden" name="thumb" size="50" value="<%= question.thumb %>" required/><br>
-				<input type='file' name='image'/>
+				<div class="_imageHolder">
+                    <input type="file" name="image" class="_image"/>
+                    <div class="_imagePreview"></div>
+                    <div class="_imageOutput"></div>
+                </div>
 			</td>
 		</tr>
 	</table>
@@ -58,4 +62,5 @@
 		<br><br><br><br>
 	</form>
 </body>
+<script type="text/javascript" src="/js/admin/question/edit.js"></script>
 </html>

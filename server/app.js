@@ -50,7 +50,8 @@ var app = express(),
     flash = require('express-flash'),
     layoutEngine = require('ejs-locals'),
     globalLocals = require('./modules/global-locals'),
-    routes = require('./routes');
+    routes = require('./routes'),
+    less = require('less-middleware');
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -68,6 +69,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser('namist'));
 app.use(methodOverride());
+app.use(less(
+    path.join(__dirname, 'apps', 'less'),
+    {
+        dest: path.join(__dirname, '../client'),
+        preprocess: {
+            path: function (pathname, req) {
+                return pathname.replace('/stylesheets', '');
+            }
+        },
+        once: true
+    }
+));
 app.use(express.static(path.join(__dirname, '../client')));
 
 app.use(session({cookie: {maxAge:60000}}));

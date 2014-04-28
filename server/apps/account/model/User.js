@@ -10,6 +10,11 @@ var userSchema = new Schema({
         trim        : true,
         unique      : true
     },
+    // 사용자 사진
+    avatar: {
+        type        : String,
+        default     : null
+    },
     // 이메일 인증 여부 플래그
     authentication: {
         type        : Boolean,
@@ -27,9 +32,15 @@ var userSchema = new Schema({
         },
         password: {
             type    : String,
-            require : true,
             trim    : true
         }
+    },
+    // Facebook
+    facebook: {
+        id          : String,
+        token       : String,
+        email       : String,
+        name        : String
     }
 });
 

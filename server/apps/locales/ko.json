@@ -7,7 +7,11 @@
 
     "BTN_SIGN_IN": "로그인",
     "BTN_SIGN_UP": "가입",
-    "BTN_RECOVER": "전송하기",
+    "BTN_RECOVER": "전송",
+    "BTN_GO_HOME": "홈",
+    "BTN_LOGOUT": "로그아웃",
+    "BTN_DELETE_ACCOUNT": "탈퇴",
+    "BTN_SEND_VERIFICATION_EMAIL": "인증 메일 재발송",
 
     "PLACEHOLDER_EMAIL": "이메일",
     "PLACEHOLDER_USERNAME": "이름",
@@ -24,7 +28,8 @@
     "SI_FORM_SIGN_UP_LINK": "네이미스트에 가입하세요!",
     "SI_FORM_RESET_PASSWORD_LINK": "비밀번호를 잊으셨나요?",
     "SI_FORM_OR": "또는",
-    "SI_FORM_SOCIAL_FACEBOOK": "Facebook으로 로그인",
+    "SI_FORM_SOCIAL_FACEBOOK": "Facebook 계정으로 로그인하기",
+    "SI_FORM_SOCIAL_TWITTER": "Twitter 계정으로 로그인하기",
 
     "SU_FORM_HEADER": "가입하기",
     "SU_FORM_SUB_HEADER": "언제까지나 무료로 즐길 수 있습니다",
@@ -32,8 +37,8 @@
     "PROFILE_FORM_HEADER": "프로필",
     "PROFILE_FORM_AUTHORIZED": "인증 완료",
     "PROFILE_FORM_NOT_AUTHORIZED": "인증 미완료",
-    "PROFILE_FORM_LOCAL_UNLINK": "탈퇴하기",
-    "PROFILE_FORM_VERIFICATION_EMAIL": "인증 키 재발송하기",
+    "PROFILE_FORM_SOCIAL_LINKS": "연결된 소셜 계정 정보",
+    "PROFILE_FORM_MY_WORKS": "나의 당선작 목록",
 
     "RECOVER_FORM_HEADER": "비밀번호 재설정하기",
     "RECOVER_FORM_SUB_HEADER": "사용자 확인에 사용할 이메일 주소와 아이디를 입력해 주세요",

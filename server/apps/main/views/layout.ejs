@@ -1,12 +1,32 @@
 <!DOCTYPE html>
 <html>
 	<head>
+	<meta property="og:title" content="Jeffrey Youngil Cho : Blog">
+    <meta property="og:type" content="blog">
+    <meta property="og:url" content="http://www.choyoungil.pe.kr">
+    <meta property="og:image" content="http://a1.twimg.com/profile_images/1202154459/n100000831305765_6084.jpg">
 	<title><% if (title) { %><%= title %> | <% } %><%= appname %></title>
 	<link rel="stylesheet" type="text/css" media="all" href="/stylesheets/reset.css" />
 	<link rel="stylesheet" type="text/css" media="all" href="/stylesheets/style.css" />
 </head>
 <body>
-
+<div id="fb-root"></div>
+<script>
+window.fbAsyncInit = function() {
+    FB.init({
+      appId      : "1416426891954169",        // App ID
+      status     : true,           // check login status
+      cookie     : true,           // enable cookies to allow the server to access the session
+      xfbml      : true            // parse page for xfbml or html5 social plugins like login button below
+    });
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ko_KR/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
 <%- partial('gnb') %>
 <div id="wrap">
 

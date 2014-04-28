@@ -41,9 +41,18 @@
 
 	<div class="preview">
 		<img src="<%= preview[idx] %>" alt="제목학원 우수작" />
+		<div class="fb-share-button" data-href="http://localhost:3000/" data-type="button_count"></div>
 	</div>
 </div><!-- //#content-wrap -->
 
 <div id="footer-wrap">
 	Copyright(c) namist
 </div><!-- //#footer-wrap -->
+<script type="text/javascript">
+	FB.ui({
+        method: 'stream.share',
+        u: 'http://fbrell.com/'
+      },
+      function(response) { alert(response); }
+     );
+</script>

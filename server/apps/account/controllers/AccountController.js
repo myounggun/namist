@@ -127,50 +127,5 @@ module.exports = {
                 res.render('formProfile');
             }
         });
-    },
-    processEdit: function (req, res, next) {
-        var user = req.user,
-            update = {authentication: false};
-
-        if (Object.keys(req.body).length === 0) {
-            return;
-        }
-
-        for (var key in req.body) {
-            update[key] = req.body[key];
-        }
-
-        User.update({_id: user._id}, update, {multi: true}, function (err, numAffected) {
-            if (err) {
-                var msg = err.message;
-
-                switch (err.name) {
-                    case 'MongoError':
-                        if (msg.indexOf('$email') > -1) {
-                            msg = res.__('FAILURE_ALREADY_EMAIL');
-                        } else  if (msg.indexOf('$username') > -1) {
-                            msg = res.__('FAILURE_ALREADY_USER');
-                        } else {
-                            msg = res.__('FAILURE_NOT_AVAILABLE');
-                        }
-
-                        break;
-                }
-
-                if (msg) {
-                    return res.json({
-                        status: 'error',
-                        message: res.__(msg)
-                    });
-                } else {
-                    return next(err);
-                }
-            }
-
-            res.json({
-                status: 'ok',
-                message: numAffected + ' field(s) modified.'
-            });
-        });
     }
 };

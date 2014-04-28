@@ -24,7 +24,8 @@
 		<% for (var key in doc) {
             if (typeof doc[key] === 'object') {
                 for (var innerKey in doc[key]) {
-                    if (innerKey === 'password' || innerKey === 'email') {
+                    if (innerKey === 'password' || innerKey === 'email' ||
+                        innerKey === 'id' || innerKey === 'token' || innerKey === 'email' || innerKey === 'name') {
         %>
 		        <li><%= key + '-' + innerKey %> : <%= doc[key][innerKey] %></li>
             <% }} %>

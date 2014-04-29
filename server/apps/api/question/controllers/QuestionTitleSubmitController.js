@@ -1,6 +1,6 @@
 /**
  * 문제 제목 제출 API 
- * /api/question/submit?id=91&title=재미없는짤방
+ * /api/question/title/submit?id=91&title=재미없는짤방
  */
 var Question = require('../../../admin/question/Question');
 

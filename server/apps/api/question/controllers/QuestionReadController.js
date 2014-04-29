@@ -14,6 +14,8 @@ module.exports = function(req, res) {
 
         if (!err && doc) {
             status = 'success';
+        } else if (!doc) {
+            status = 'not_found';
         }
 
         var result = {

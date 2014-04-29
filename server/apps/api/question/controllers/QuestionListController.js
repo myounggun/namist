@@ -35,7 +35,14 @@ module.exports = function(req, res) {
         getQuestions.bind(null, query, fields, pagingOption)
     ],
     function (err, questions, totalCount) {
+        var status = 'error';
+        
+        if (!err && questions) {
+            status = 'success';
+        }
+        
         var result = {
+            status    : status,
             page      : page,
             pageSize  : pageSize,
             totalPage : Math.ceil(totalCount / pageSize),

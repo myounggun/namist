@@ -5,15 +5,19 @@
 var Question = require('../../../admin/question/Question');
 
 module.exports = function(req, res) {
-    var title = decodeURIComponent(req.query.title);
-    var query = {id: req.query.id};
+    if (!req.user) {
+        return res.json({status: 'error', msg: '로그인이 필요합니다.'});
+    }
+    
+    var title  = decodeURIComponent(req.query.title);
+    var query  = {id: req.query.id};
     var updateOption = {
         $push: {
-            'titles': {'title': title}
+            'titles': {'title': title, '_id': req.user._id}
         }
     };
     
-    Question.update(query, updateOption, {upsert: true}, function(err, updateCount){
+    Question.update(query, updateOption, {safe: true}, function(err, updateCount){
         if (err) console.log(err);
         
         var status = 'error';
@@ -23,7 +27,8 @@ module.exports = function(req, res) {
         }
 
         res.json({
-            status : status
+            status : status,
+            upadte : updateCount
         });
     });
 }

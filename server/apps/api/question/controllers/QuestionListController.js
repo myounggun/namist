@@ -23,7 +23,7 @@ module.exports = function(req, res) {
     var pageSize = parseInt(req.query.pageSize, 10) || 3;
 
     var query  = {}; 
-    var fields = 'id date image time titles displayDate';
+    var fields = {};//'id date image time titles displayDate';
     var pagingOption = {
         skip  : (page - 1) * pageSize,
         limit : pageSize,

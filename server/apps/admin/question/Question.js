@@ -31,7 +31,7 @@ var Question = new Schema({
         date : {type: Date, default: Date.now},
         _id: {
             type: Schema.Types.ObjectId,
-            ref: 'Account'
+            ref: 'User'
         },
 		users: [{
             name : {type: String},

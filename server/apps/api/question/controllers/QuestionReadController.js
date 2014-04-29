@@ -10,6 +10,8 @@ module.exports = function(req, res) {
     var fields = 'id date image time titles displayDate';
     
     Question.findOne(query, fields, function(err, doc) {
+        if (err) console.log(err);
+        
         var status = 'error';
 
         if (!err && doc) {

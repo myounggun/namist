@@ -1,7 +1,7 @@
 /**
- * 문제 제목 투표 API (query: id, titleId)
+ * 문제 제목 투표 API (query: id, titleId) - 로그인 필
  * /api/question/title/poll?id=91&titleId=535f7eb57e568f6b16b46503
- *
+ * 
  * 중첩 배열에 $push, $addToSet 적용 안되는 버그 있음.
  * http://stackoverflow.com/questions/12623554/using-mongodb-how-do-i-update-a-sub-document-of-a-sub-array-when-element-positi
  */
@@ -27,9 +27,10 @@ module.exports = function(req, res) {
         var titles = doc["titles"];
 
         for (var i = 0, t; t = titles[i]; i++) {
-            if (t["_id"].toString() === titleID) {
-                t["users"].push({
-                    name: req.user.username
+            if (t._id.toString() === titleID) {
+                t.users.push({
+                    id   : req.user._id,
+                    name : req.user.username
                 });
             }
         }

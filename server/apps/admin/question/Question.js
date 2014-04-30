@@ -34,6 +34,7 @@ var Question = new Schema({
             ref: 'User'
         },
 		users: [{
+		    id   : {type: String},
             name : {type: String},
             date : {type: Date, default: Date.now}
         }]

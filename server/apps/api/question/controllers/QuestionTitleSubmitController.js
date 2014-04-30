@@ -1,5 +1,5 @@
 /**
- * 문제 제목 제출 API 
+ * 문제 제목 제출 API (query: id, title) - 로그인 필요
  * /api/question/title/submit?id=91&title=재미없는짤방
  */
 var Question = require('../../../admin/question/Question');
